@@ -3,19 +3,20 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import store, { history } from './store'
-import App from './containers/app'
+import App from './scenes/app'
+import { ThemeProvider } from 'styled-components'
 
-import 'sanitize.css/sanitize.css'
-import './index.css'
+// import 'sanitize.css/sanitize.css'
+import theme from 'themes/'
 
 const target = document.querySelector('#root')
 
 render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <div>
+      <ThemeProvider theme={theme}>
         <App />
-      </div>
+      </ThemeProvider>
     </ConnectedRouter>
   </Provider>,
   target
