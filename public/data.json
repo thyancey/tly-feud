@@ -1,3 +1,66 @@
 {
-  "title": "boilerplate"
+  "title": "Family Feud",
+  "surveys":[
+    {
+      "id": "1",
+      "title": "Name a dog people like",
+      "answers":[
+        {
+          "value": "Pitbull",
+          "points": 51
+        },{
+          "value": "Chihuahua",
+          "points": 21
+        },{
+          "value": "Weiner",
+          "points": 10
+        },{
+          "value": "CatDog",
+          "points": 1
+        },{
+          "value": "OtherDog",
+          "points": 1
+        },{
+          "value": "OtherDog2",
+          "points": 1
+        },{
+          "value": "OtherDog3",
+          "points": 1
+        },{
+          "value": "OtherDog4",
+          "points": 1
+        }
+      ]
+    },{
+      "id": "2",
+      "title": "Name a cat people like",
+      "answers":[
+        {
+          "value": "Cat1",
+          "points": 51
+        },{
+          "value": "Cat2",
+          "points": 21
+        },{
+          "value": "Cat3",
+          "points": 10
+        },{
+          "value": "CatDog",
+          "points": 1
+        },{
+          "value": "OtherCat",
+          "points": 1
+        },{
+          "value": "OtherCat2",
+          "points": 1
+        },{
+          "value": "OtherCat3",
+          "points": 1
+        },{
+          "value": "OtherCat4",
+          "points": 1
+        }
+      ]
+    }
+  ]
 }

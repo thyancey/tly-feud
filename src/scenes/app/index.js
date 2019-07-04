@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { setData } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
 
+import Scoreboard from 'scenes/scoreboard';
+
 import TestImage from './assets/loading.gif';
 
 require('themes/app.scss');
@@ -63,6 +65,7 @@ class App extends Component {
       <AppHTML id="app" tabIndex="-1">
         <h1>{ this.props.title || 'Loading..' }</h1>
         <img src={TestImage} alt="loading"/>
+        <Scoreboard />
       </AppHTML>
     );
   }
