@@ -25,21 +25,47 @@ const HtmlAnswer = styled.li`
   }
 `
 
-class Answer extends Component {
+const HtmlCovered = styled.li`
+  cursor: pointer;
+  background-color: ${themeGet('color', 'blue')};
+  color: ${themeGet('color', 'white')};
+  text-align:center;
 
+  margin: 2rem;
+  padding: 1rem;
+  display:block;
+
+  h1{
+    width:100%;
+    vertical-align:middle;
+  }
+`
+
+class Answer extends Component {
   constructor(){
     super();
   }
 
   render(){
-    return(
-      <HtmlAnswer>
-        <div>
-          <h1>{this.props.title}</h1>
-          <span>{this.props.score}</span>
-        </div>
-      </HtmlAnswer>
-    );
+    if(this.props.revealed){
+      return(
+        <HtmlAnswer>
+          <div >
+            <h1>{this.props.title}</h1>
+            <span>{this.props.score}</span>
+          </div>
+        </HtmlAnswer>
+      );
+    }else{
+      return(
+        <HtmlCovered onClick={this.props.onClick}>
+          <div >
+            <h1>{this.props.label}</h1>
+          </div>
+        </HtmlCovered>
+      );
+    }
+
   }
 }
 export default Answer

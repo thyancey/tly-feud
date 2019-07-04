@@ -6,6 +6,7 @@ import { createSelector } from 'reselect';
 
 import { themeGet } from 'themes/';
 import Answer from './answer';
+import { startRound, revealAnswer, incrementScore, endRound } from 'store/actions';
 
 const HtmlContainer = styled.div`
   position:absolute;
@@ -18,7 +19,6 @@ const HtmlContainer = styled.div`
   display: grid;
   grid-template-columns: 15% 1fr 15%;
   grid-template-rows: 15% 1fr 15%;
-
 
   border-radius: 3rem;
 
@@ -117,16 +117,30 @@ class Scoreboard extends Component {
           <HtmlAnswerGrid>
             <HtmlAnswerColumnDouble position="1">
               { surveyData.answers.filter((s, i) => (
-                i % 2 === 0
+                i < surveyData.answers.length / 2
               )).map((s, i) => (
-                <Answer key={i} title={s.value} score={s.points} />
+                <Answer 
+                  key={i} 
+                  label={i + 1}
+                  revealed={s.revealed}
+                  title={s.value} 
+                  score={s.points} 
+                  onClick={ () => this.onAnswerClick(s.idx) }
+                  />
               ))}
             </HtmlAnswerColumnDouble>
             <HtmlAnswerColumnDouble position={2}>
             { surveyData.answers.filter((s, i) => (
-                i % 2 !== 0
+              i >= surveyData.answers.length / 2
               )).map((s, i) => (
-                <Answer key={i} title={s.value} score={s.points} />
+                <Answer 
+                  key={i} 
+                  label={i + 1}
+                  revealed={s.revealed}
+                  title={s.value} 
+                  score={s.points} 
+                  onClick={ () => this.onAnswerClick(s.idx) }
+                  />
               ))}
             </HtmlAnswerColumnDouble>
           </HtmlAnswerGrid>
@@ -139,41 +153,83 @@ class Scoreboard extends Component {
   renderTimer(startTime, endTime){
     const time = '00:13';
     return (
-      <HtmlTimer>
+      <HtmlTimer onClick={() => this.onTimerClick()}>
         <h2>{time}</h2>
       </HtmlTimer>
     );
   }
 
+  startRound(){
+    this.props.startRound({ id: "2", team:  "jibbles"});
+  }
+
+  onAnswerClick(answerIdx){
+    this.props.revealAnswer(answerIdx);
+  }
+
+  onTimerClick(){
+    this.props.endRound(this.props.activeTeam, this.props.survey.score);
+  }
+
+
   render(){
-    console.log('got survey: ', this.props.survey)
     return(
       <HtmlContainer id="scoreboard" >
         { this.renderTimer() }
         <h1>{this.props.title}</h1>
         <HtmlScoreBlock position={1}>
-          <h3>{221}</h3>
+          <p>{this.props.teams.left.name}</p>
+          <h3>{this.props.leftScore}</h3>
         </HtmlScoreBlock>
         { this.renderSurvey(this.props.survey) }
         <HtmlScoreBlock position={3}>
-          <h3>{345}</h3>
+          <p>{this.props.teams.right.name}</p>
+          <h3>{this.props.rightScore}</h3>
         </HtmlScoreBlock>
         <HtmlFooter>
           <h3>{this.props.survey && this.props.survey.title}</h3>
+          <p>{`MULTIPLIER: X${this.props.multiplier}`}</p>
         </HtmlFooter>
       </HtmlContainer>
     );
   }
 }
 
-
 export const createSelector_getSurvey = () => {
   return createSelector(
-    [ state => state.data.surveys, state => state.data.game.activeId ],
-    (surveys, activeId) => {
+    [ 
+      state => state.data.surveys, 
+      state => state.game.activeId, 
+      state => state.game.revealed, 
+      state => state.game.multiplier 
+    ],
+    (surveys, activeId, revealed, multiplier) => {
       const foundSurvey = surveys && surveys.find(s => s.id === activeId);
-      if(foundSurvey) return foundSurvey;
-      return false;
+      if(foundSurvey){
+        let score = 0;
+
+        foundSurvey.answers.map((s, i) => {
+          if(revealed.indexOf(i) > -1){
+            score += s.points * multiplier;
+
+            s.revealed = true;
+            s.idx = i;
+            return s;
+          }else{
+            s.revealed = false;
+            s.idx = i;
+            return s;
+          }
+        });
+
+        foundSurvey.score = score;
+
+        return {
+          ...foundSurvey
+        }
+      }
+
+      return null;
     }
   )
 }
@@ -182,7 +238,12 @@ const makeMapStateToProps = () => {
   const getSurvey = createSelector_getSurvey();
   const mapStateToProps = (state, props) => ({
     survey: getSurvey(state, props),
-    title: state.data.title
+    title: state.data.title,
+    teams: state.game.teams,
+    multiplier: state.game.multiplier,
+    leftScore: state.game.teams.left.score,
+    rightScore: state.game.teams.right.score,
+    activeTeam: state.game.activeTeam
   });
 
   return mapStateToProps;
@@ -190,7 +251,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    {},
+    { startRound, revealAnswer, incrementScore, endRound },
     dispatch
   )
 

@@ -9,12 +9,7 @@ const ALLOWED_STORED_FIELDS = [ 'title', 'surveys' ];
 const initialState = {
   loaded: false,
   title: 'loading',
-  game: {
-    activeId: "1",
-    activeTeam: null,
-    roundStart: null,
-    roundEnd: null
-  }
+  surveys: []
 }
 
 export default (state = initialState, action) => {
