@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
+
 import { setData } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
-
 import Scoreboard from 'scenes/scoreboard';
-
 import TestImage from './assets/loading.gif';
 
 require('themes/app.scss');

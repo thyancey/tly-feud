@@ -10,7 +10,7 @@ const initialState = {
   loaded: false,
   title: 'loading',
   game: {
-    activeId: -1,
+    activeId: "1",
     activeTeam: null,
     roundStart: null,
     roundEnd: null

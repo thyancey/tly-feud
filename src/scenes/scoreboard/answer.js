@@ -3,9 +3,26 @@ import styled from 'styled-components';
 
 import { themeGet } from 'themes/';
 
-const HtmlAnswer = styled.div`
-  background-color: 'blue';
-  border: .25rem dashed black;
+const HtmlAnswer = styled.li`
+  background-color: ${themeGet('color', 'white')};
+
+  margin: 2rem;
+  padding: 1rem;
+  display:block;
+
+  h1{
+    display:inline-block;
+    width:80%;
+    vertical-align:middle;
+  }
+  span{
+    display:inline-block;
+    width:20%;
+    text-align:center;
+    vertical-align:middle;
+    border-left: 2px solid purple;
+    height:100%;
+  }
 `
 
 class Answer extends Component {
@@ -17,8 +34,10 @@ class Answer extends Component {
   render(){
     return(
       <HtmlAnswer>
-        <h1>{this.props.title}</h1>
-        <span>{this.props.score}</span>
+        <div>
+          <h1>{this.props.title}</h1>
+          <span>{this.props.score}</span>
+        </div>
       </HtmlAnswer>
     );
   }
