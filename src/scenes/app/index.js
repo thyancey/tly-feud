@@ -57,7 +57,7 @@ class App extends Component {
       const newId = this.getNextRoundId();
       this.props.startRound(newId);
     }else{
-      this.props.endRound(this.props.activeTeam, this.props.survey.score);
+      this.props.endRound(this.props.survey.score);
     }
   }
 

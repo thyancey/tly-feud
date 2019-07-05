@@ -54,14 +54,11 @@ export const revealAnswer = (payload) => {
 
 
 export const END_ROUND = 'END_ROUND';
-export const endRound = (team, points) => {
+export const endRound = (payload) => {
   return dispatch => {
     dispatch({
       type: END_ROUND,
-      payload: {
-        team: team,
-        points: points
-      }
+      payload: payload
     });
   }
 }

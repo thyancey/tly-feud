@@ -49,10 +49,10 @@ export default (state = initialState, action) => {
     }
     
     case END_ROUND:{
-      console.log('its over', action.payload.team)
       const teams = state.teams;
-
-      teams[action.payload.team].score += action.payload.points;
+      if(state.activeTeam){
+        teams[state.activeTeam].score += action.payload;
+      }
 
       return {
         ...state,

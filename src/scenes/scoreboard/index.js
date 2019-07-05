@@ -168,7 +168,7 @@ class Scoreboard extends Component {
   }
 
   onTimerClick(){
-    this.props.endRound(this.props.activeTeam, this.props.survey.score);
+    this.props.endRound(this.props.survey.score);
   }
 
 

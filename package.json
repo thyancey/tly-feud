@@ -1,6 +1,6 @@
 {
   "private": true,
-  "homepage": "https://create-react-app-redux.now.sh",
+  "homepage": "http://www.thomasyancey.com/projects/feud/",
   "scripts": {
     "deploy": "now && now alias",
     "start": "react-scripts start",
