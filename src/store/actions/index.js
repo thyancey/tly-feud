@@ -8,6 +8,29 @@ export const setData = (data) => {
   }
 }
 
+export const SET_TEAMS = 'SET_TEAMS';
+export const setTeams = (teamLeft, teamRight) => {
+  return dispatch => {
+    dispatch({
+      type: SET_TEAMS,
+      payload: {
+        left: teamLeft,
+        right: teamRight
+      }
+    });
+  }
+}
+
+export const SET_ACTIVE_TEAM = 'SET_ACTIVE_TEAM';
+export const setActiveTeam = (team) => {
+  return dispatch => {
+    dispatch({
+      type: SET_ACTIVE_TEAM,
+      payload: team
+    });
+  }
+}
+
 export const START_ROUND = 'START_ROUND';
 export const startRound = (payload) => {
   return dispatch => {
@@ -55,3 +78,25 @@ export const incrementScore = (team, points) => {
     });
   }
 }
+
+
+export const THROW_STRIKE = 'THROW_STRIKE';
+export const throwStrike = (payload) => {
+  return dispatch => {
+    dispatch({
+      type: THROW_STRIKE,
+      payload: payload
+    });
+  }
+}
+
+export const REVERT_STRIKE = 'REVERT_STRIKE';
+export const revertStrike = (payload) => {
+  return dispatch => {
+    dispatch({
+      type: REVERT_STRIKE,
+      payload: payload
+    });
+  }
+}
+

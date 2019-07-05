@@ -3,14 +3,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { setData } from 'store/actions/index.js';
+import { setData, endRound, startRound } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
 import Scoreboard from 'scenes/scoreboard';
+import Debug from 'scenes/debug';
 import TestImage from './assets/loading.gif';
+import { createSelector_getSurvey } from 'store/selectors';
 
 require('themes/app.scss');
 
-const AppHTML = styled.section`
+const HtmlApp = styled.section`
   position:absolute;
   left:0;
   top:0;
@@ -21,6 +23,7 @@ const AppHTML = styled.section`
   background-color:  ${themeGet('color', 'black')};
   color: ${themeGet('color', 'blue')};
 `
+
 class App extends Component {
 
   constructor(){
@@ -35,53 +38,88 @@ class App extends Component {
     });
   }
 
+  getNextRoundId(){
+    const foundIdx = this.props.surveys.findIndex(s => s.id === this.props.roundId);
+    if(foundIdx > -1){
+      let nextIdx = 0;
+      if(this.props.surveys[foundIdx + 1]){
+        nextIdx = foundIdx + 1;
+      }
+
+      return this.props.surveys[nextIdx].id;
+    }else{
+      return this.props.roundId;
+    }
+  }
+
+  onEndOfRound(advance){
+    if(advance){
+      const newId = this.getNextRoundId();
+      this.props.startRound(newId);
+    }else{
+      this.props.endRound(this.props.activeTeam, this.props.survey.score);
+    }
+  }
+
   loadStoreData(){
     const url = './data.json';
     console.log(`reading app data from '${url}'`);
 
-    fetch(url).then(response => {
-                      return response.json();
-                    }, 
-                    err => {
-                      console.error('Error fretching url, using default data', err);
-                      this.setDefaultData();
-                    }) //- bad url responds with 200/ok? so this doesnt get thrown
-              .then(json => {
-                      console.log('data was read successfully')
-                      this.props.setData(json);
-                      // this.setDefaultData();
-                      return true;
-                    }, 
-                    err => {
-                      console.error('Error parsing store JSON (or the url was bad), using default data', err);
-                      this.setDefaultData();
-                    });
+    fetch(url)
+      .then(response => {
+          return response.json();
+        }, 
+        err => {
+          console.error('Error fretching url, using default data', err);
+          this.setDefaultData();
+        }) //- bad url responds with 200/ok? so this doesnt get thrown
+      .then(json => {
+          console.log('data was read successfully')
+          this.props.setData(json);
+          // this.setDefaultData();
+          return true;
+        }, 
+        err => {
+          console.error('Error parsing store JSON (or the url was bad), using default data', err);
+          this.setDefaultData();
+        });
   }
 
   render(){
     return(
-      <AppHTML id="app" tabIndex="-1">
+      <HtmlApp id="app" tabIndex="-1">
         <h1>{ this.props.title || 'Loading..' }</h1>
         <img src={TestImage} alt="loading"/>
-        <Scoreboard />
-      </AppHTML>
+        <Debug onEndOfRound={(advance) => this.onEndOfRound(advance)}/>
+        <Scoreboard onEndOfRound={(advance) => this.onEndOfRound(advance)}/>
+      </HtmlApp>
     );
   }
 }
 
-const mapStateToProps = ({ data }) => ({
-  loaded: data.slideIdx,
-  title: data.title
-})
+const makeMapStateToProps = () => {
+  const getSurvey = createSelector_getSurvey();
+  const mapStateToProps = (state, props) => ({
+    survey: getSurvey(state, props),
+    surveys: state.data.surveys,
+    roundId: state.game.roundId,
+    surveys: state.data.surveys,
+    loaded: state.data.slideIdx,
+    title: state.data.title,
+    activeTeam: state.game.activeTeam
+  });
+
+  return mapStateToProps;
+}
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { setData },
+    { setData, endRound, startRound },
     dispatch
   )
 
 export default connect(
-  mapStateToProps,
+  makeMapStateToProps,
   mapDispatchToProps
 )(App)
 

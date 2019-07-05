@@ -2,24 +2,29 @@ import {
   START_ROUND,
   END_ROUND,
   REVEAL_ANSWER,
-  INCREMENT_SCORE
+  INCREMENT_SCORE,
+  THROW_STRIKE,
+  REVERT_STRIKE,
+  SET_ACTIVE_TEAM
 } from '../actions';
 
  
 const initialState = {
-  activeId: "1",
-  activeTeam: "left",
+  roundId: null,
+  activeTeam: null,
   roundStart: null,
   revealed: [],
   multiplier: 2,
   teams: {
     left: {
-      name: "The Wining Team",
-      score: 0
+      name: "",
+      score: 0,
+      strikes: 0
     },
     right: {
-      name: "The Chris Team",
-      score: 0
+      name: "",
+      score: 0,
+      strikes: 0
     }
   }
 }
@@ -27,13 +32,39 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case START_ROUND:{
+      console.log('START_ROUND', action.payload)
       const now = new Date().getTime();
+
+      const teams = state.teams;
+      teams.left.strikes = 0;
+      teams.right.strikes = 0;
 
       return {
         ...state,
-        activeId: action.payload.id,
-        activeTeam: action.payload.team,
-        roundStart: now
+        roundId: action.payload,
+        roundStart: now,
+        revealed: [],
+        teams:teams
+      }
+    }
+    
+    case END_ROUND:{
+      console.log('its over', action.payload.team)
+      const teams = state.teams;
+
+      teams[action.payload.team].score += action.payload.points;
+
+      return {
+        ...state,
+        roundStart: -1,
+        teams: teams
+      }
+    }
+
+    case SET_ACTIVE_TEAM:{
+      return {
+        ...state,
+        activeTeam: action.payload
       }
     }
 
@@ -61,15 +92,26 @@ export default (state = initialState, action) => {
       } 
     }
 
-    case END_ROUND:{
-      console.log('its over', action.payload.team)
-      const teams = state.teams;
 
-      teams[action.payload.team].score += action.payload.points;
+    case THROW_STRIKE:{
+      const teams = state.teams;
+      teams[state.activeTeam].strikes += 1;
 
       return {
         ...state,
-        roundStart: -1,
+        teams: teams
+      }
+    }
+
+    case REVERT_STRIKE:{
+      const teams = state.teams;
+      teams[state.activeTeam].strikes -= 1;
+      if(teams[state.activeTeam].strikes < 0){
+        teams[state.activeTeam].strikes = 0;
+      }
+
+      return {
+        ...state,
         teams: teams
       }
     }

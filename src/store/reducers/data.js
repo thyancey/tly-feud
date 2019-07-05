@@ -4,11 +4,15 @@ import {
 import { SET_TRANSITION } from '../actions/transition';
 
 //- initialState data is overwritten from an external json file in public/data.json
-const ALLOWED_STORED_FIELDS = [ 'title', 'surveys' ];
+const ALLOWED_STORED_FIELDS = [ 'title', 'surveys', 'teams' ];
  
 const initialState = {
   loaded: false,
   title: 'loading',
+  teams: {
+    left:'',
+    right:''
+  },
   surveys: []
 }
 

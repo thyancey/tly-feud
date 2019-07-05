@@ -1,64 +1,77 @@
 {
   "title": "Family Feud",
+  "teams":{
+    "left": "The Winning Team",
+    "right": "The Chris Team"
+  },
   "surveys":[
     {
       "id": "1",
-      "title": "Name a dog people like",
+      "title": "Name a reason you might get rid of an old family heirloom.",
       "answers":[
         {
-          "value": "Pitbull",
-          "points": 51
+          "value": "Broken",
+          "points": 29
         },{
-          "value": "Chihuahua",
-          "points": 21
+          "value": "Ugly",
+          "points": 22
         },{
-          "value": "Weiner",
+          "value": "Divorce",
+          "points": 18
+        },{
+          "value": "Sell / Need money",
+          "points": 12
+        },{
+          "value": "Too much stuff",
           "points": 10
         },{
-          "value": "CatDog",
-          "points": 1
+          "value": "Family feud",
+          "points": 5
         },{
-          "value": "OtherDog",
-          "points": 1
-        },{
-          "value": "OtherDog2",
-          "points": 1
-        },{
-          "value": "OtherDog3",
-          "points": 1
-        },{
-          "value": "OtherDog4",
-          "points": 1
+          "value": "Moving",
+          "points": 2
         }
       ]
     },{
       "id": "2",
-      "title": "Name a cat people like",
+      "title": "What are you most afraid of?",
       "answers":[
         {
-          "value": "Cat1",
-          "points": 51
+          "value": "CLOWNS",
+          "points": 28
         },{
-          "value": "Cat2",
-          "points": 21
+          "value": "SPIDERS",
+          "points": 25
         },{
-          "value": "Cat3",
-          "points": 10
+          "value": "SNAKES",
+          "points": 17
         },{
-          "value": "CatDog",
+          "value": "GHOSTS",
+          "points": 15
+        },{
+          "value": "HEIGHTS",
+          "points": 14
+        },{
+          "value": "NIGHTMAN",
           "points": 1
+        }
+      ]
+    },{
+      "id": "3",
+      "title": "Tell me something many people do just once a week.",
+      "answers":[
+        {
+          "value": "Church",
+          "points": 35
         },{
-          "value": "OtherCat",
-          "points": 1
+          "value": "Groceries / Shopping",
+          "points": 24
         },{
-          "value": "OtherCat2",
-          "points": 1
+          "value": "Laundry",
+          "points": 15
         },{
-          "value": "OtherCat3",
-          "points": 1
-        },{
-          "value": "OtherCat4",
-          "points": 1
+          "value": "Clean House",
+          "points": 9
         }
       ]
     }
