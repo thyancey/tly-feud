@@ -48,7 +48,8 @@ export default (state = initialState, action) => {
         roundStart: now,
         revealed: [],
         teams:teams,
-        transitionLabel:null
+        transitionLabel:null,
+        activeTeam: null
       }
     }
     

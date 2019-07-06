@@ -91,8 +91,6 @@ class App extends Component {
     return(
       <HtmlApp id="app" tabIndex="-1">
         <Modal />
-        <h1>{ this.props.title || 'Loading..' }</h1>
-        <img src={TestImage} alt="loading"/>
         <Debug onEndOfRound={(advance) => this.onEndOfRound(advance)}/>
         <Scoreboard onEndOfRound={(advance) => this.onEndOfRound(advance)}/>
       </HtmlApp>

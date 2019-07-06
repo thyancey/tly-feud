@@ -3,14 +3,25 @@ import styled from 'styled-components';
 
 import { themeGet } from 'themes/';
 
+
 const HtmlAnswer = styled.li`
   background-color: ${themeGet('color', 'white')};
 
   margin: 2rem;
-  padding: 1rem;
   display:block;
 
-  h1{
+  min-height:9rem;
+  position:relative;
+
+  div{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:100%;
+    padding:1rem;
+  }
+
+  h1,h2{
     display:inline-block;
     width:80%;
     vertical-align:middle;
@@ -33,7 +44,16 @@ const HtmlCovered = styled.li`
 
   margin: 2rem;
   padding: 1rem;
+  min-height:9rem;
   display:block;
+  position:relative;
+
+  div{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:100%;
+  }
 
   h1{
     width:100%;
@@ -51,7 +71,7 @@ class Answer extends Component {
       return(
         <HtmlAnswer>
           <div >
-            <h1>{this.props.title}</h1>
+            <h2>{this.props.title}</h2>
             <span>{this.props.score}</span>
           </div>
         </HtmlAnswer>

@@ -27,6 +27,9 @@ const HtmlScoreBlock = styled.div`
 const HtmlTop = styled.div`
 
 `
+const HtmlInstructions = styled.div`
+  
+`
 
 const HtmlStrikes = styled.div`
 
@@ -66,6 +69,7 @@ class Scorebox extends Component {
         active={this.props.active} 
         position={this.props.position === 'left' ? 1 : 3}
         onClick={this.props.onClick} >
+        <HtmlInstructions>{'Click to set team active'}</HtmlInstructions>
         <HtmlTop>
           <p>{this.props.name}</p>
           <h3>{this.props.score}</h3>

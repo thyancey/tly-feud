@@ -9,6 +9,11 @@ import Scorebox from './scorebox';
 import { startRound, revealAnswer, incrementScore, endRound, setActiveTeam } from 'store/actions';
 import { createSelector_getSurvey } from 'store/selectors';
 
+import SoundHorn from 'assets/sounds/bikehorn.wav';
+import UIfx from 'uifx';
+const soundHorn = new UIfx({asset: SoundHorn});
+
+
 const HtmlContainer = styled.div`
   position:absolute;
   left:10%;
@@ -164,6 +169,7 @@ class Scoreboard extends Component {
   }
 
   onAnswerClick(answerIdx){
+    soundHorn.setVolume(.5).play();
     this.props.revealAnswer(answerIdx);
   }
 

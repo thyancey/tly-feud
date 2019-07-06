@@ -2,23 +2,30 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-
 import { themeGet } from 'themes/';
 import { throwStrike, showStrike, revertStrike, endRound, startRound } from 'store/actions';
+
+import SoundBuzzer from 'assets/sounds/buzzer.wav';
+import UIfx from 'uifx';
+
+const soundBuzzer = new UIfx({asset: SoundBuzzer});
 
 const HtmlDebug = styled.div`
   cursor:pointer;
   position: absolute;
   left:2rem;
   bottom:2rem;
+  background-color:black;
+  border:.5rem dashed white;
+
+  z-index:1;
 `
 
 const HtmlStrikeButton = styled.div`
   cursor:pointer;
-  width:6rem;
   height:4rem;
   border: .25rem solid red;
-  font-size:4rem;
+  font-size:2rem;
   color:red;
   text-align:center;
   line-height:3.5rem;
@@ -41,7 +48,7 @@ const HtmlEndRoundButton = styled(HtmlStrikeButton)`
 class Debug extends Component {
 
   throwStrike(){
-    // this.props.throwStrike();
+    soundBuzzer.setVolume(.5).play();
     this.props.showStrike(throwStrike, null, true);
   }
   revertStrike(){
@@ -51,25 +58,31 @@ class Debug extends Component {
   render(){
     return(
       <HtmlDebug >
-        <HtmlEndRoundButton onClick={() => this.props.onEndOfRound()}>
-          <span>{'R'}</span>
-        </HtmlEndRoundButton>
-        <HtmlEndRoundButton onClick={() => this.props.onEndOfRound(true)}>
-          <span>{'R>'}</span>
-        </HtmlEndRoundButton>
-        <HtmlRevertStrikeButton onClick={() => this.revertStrike()}>
-          <span>{'X-'}</span>
-        </HtmlRevertStrikeButton>
-        <HtmlStrikeButton onClick={() => this.throwStrike()}>
-          <span>{'X+'}</span>
-        </HtmlStrikeButton>
+        { this.props.activeTeam && (
+          <div>
+          <h2>{'THE DEBUG DADDY'}</h2>
+          <HtmlEndRoundButton onClick={() => this.props.onEndOfRound()}>
+            <span>{'End round and award points'}</span>
+          </HtmlEndRoundButton>
+          <HtmlEndRoundButton onClick={() => this.props.onEndOfRound(true)}>
+            <span>{'Next round'}</span>
+          </HtmlEndRoundButton>
+          <HtmlRevertStrikeButton onClick={() => this.revertStrike()}>
+            <span>{'X-'}</span>
+          </HtmlRevertStrikeButton>
+          <HtmlStrikeButton onClick={() => this.throwStrike()}>
+            <span>{'X+'}</span>
+          </HtmlStrikeButton>
+          </div>
+        )}
       </HtmlDebug>
     );
   }
 }
 
 
-const mapStateToProps = ({ data }) => ({
+const mapStateToProps = ({ game }) => ({
+  activeTeam: game.activeTeam
 })
 
 const mapDispatchToProps = dispatch =>
