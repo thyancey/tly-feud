@@ -7,6 +7,7 @@ import { setData, endRound, startRound } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
 import Scoreboard from 'scenes/scoreboard';
 import Debug from 'scenes/debug';
+import Modal from 'scenes/modal';
 import TestImage from './assets/loading.gif';
 import { createSelector_getSurvey } from 'store/selectors';
 
@@ -51,6 +52,7 @@ class App extends Component {
       return this.props.roundId;
     }
   }
+  
 
   onEndOfRound(advance){
     if(advance){
@@ -88,6 +90,7 @@ class App extends Component {
   render(){
     return(
       <HtmlApp id="app" tabIndex="-1">
+        <Modal />
         <h1>{ this.props.title || 'Loading..' }</h1>
         <img src={TestImage} alt="loading"/>
         <Debug onEndOfRound={(advance) => this.onEndOfRound(advance)}/>

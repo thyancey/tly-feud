@@ -1,3 +1,5 @@
+import { chainActions, setTransition } from './transition';
+
 export const SET_DATA = 'SET_DATA';
 export const setData = (data) => {
   return dispatch => {
@@ -97,3 +99,44 @@ export const revertStrike = (payload) => {
   }
 }
 
+
+
+export const SHOW_STRIKE = 'SHOW_STRIKE';
+export const showStrike = (action, payload, delayed) => {
+
+  if(!delayed){
+    return dispatch => {
+      // throwStrike()(dispatch);
+      action(payload)(dispatch);
+    }
+  }else{
+    return dispatch => {
+      // throwStrike()(dispatch);
+      strikeTransition(action, payload, dispatch);
+    }
+  }
+}
+
+export const strikeTransition = (action, payload, dispatch) => {
+  chainActions([
+    {
+      delay: 0,
+      action: setTransition,
+      payload: {
+        label: 'strikePopupOpen'
+      }
+    },
+    {
+      delay: 0,
+      action: action,
+      payload: payload
+    },
+    {
+      delay: 1000,
+      action: setTransition,
+      payload: {
+        label: ''
+      }
+    }
+  ])(dispatch);
+}

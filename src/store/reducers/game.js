@@ -8,6 +8,9 @@ import {
   SET_ACTIVE_TEAM
 } from '../actions';
 
+import {
+  SET_TRANSITION
+} from '../actions/transition';
  
 const initialState = {
   roundId: null,
@@ -44,7 +47,8 @@ export default (state = initialState, action) => {
         roundId: action.payload,
         roundStart: now,
         revealed: [],
-        teams:teams
+        teams:teams,
+        transitionLabel:null
       }
     }
     
@@ -113,6 +117,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         teams: teams
+      }
+    }
+
+    case SET_TRANSITION:{
+      console.log('transitionLabel:', action.payload.label);
+      return {
+        ...state,
+        transitionLabel: action.payload.label
       }
     }
 

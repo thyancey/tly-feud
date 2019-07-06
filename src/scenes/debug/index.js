@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { themeGet } from 'themes/';
-import { throwStrike, revertStrike, endRound, startRound } from 'store/actions';
+import { throwStrike, showStrike, revertStrike, endRound, startRound } from 'store/actions';
 
 const HtmlDebug = styled.div`
   cursor:pointer;
@@ -41,7 +41,8 @@ const HtmlEndRoundButton = styled(HtmlStrikeButton)`
 class Debug extends Component {
 
   throwStrike(){
-    this.props.throwStrike();
+    // this.props.throwStrike();
+    this.props.showStrike(throwStrike, null, true);
   }
   revertStrike(){
     this.props.revertStrike();
@@ -73,7 +74,7 @@ const mapStateToProps = ({ data }) => ({
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { throwStrike, revertStrike, endRound, startRound },
+    { throwStrike, showStrike, revertStrike, endRound, startRound },
     dispatch
   )
 

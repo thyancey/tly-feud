@@ -19,7 +19,6 @@ export const executeInstructions = (actionInstructions, dispatch) => {
 }
 
 
-
 //- example transition action
 export const SET_TRANSITION = 'SET_TRANSITION';
 export const setTransition = (transitionData) => {
@@ -29,28 +28,4 @@ export const setTransition = (transitionData) => {
       payload: transitionData
     });
   }
-}
-
-export const slideTransition = (action, payload, dispatch) => {
-  chainActions([
-    {
-      delay: 0,
-      action: setTransition,
-      payload: {
-        label: 'transitionOut'
-      }
-    },
-    {
-      delay: 1000,
-      action: action,
-      payload: payload
-    },
-    {
-      delay: 1000,
-      action: setTransition,
-      payload: {
-        label: 'transitionIn'
-      }
-    }
-  ])(dispatch);
 }
