@@ -3,59 +3,93 @@ import styled from 'styled-components';
 
 import { themeGet } from 'themes/';
 
+const HtmlContainer = styled.li`
+  position:relative;
+  display:block;
+  padding: .5rem;
+  margin: 1rem .5rem;
+  border: .5rem solid ${themeGet('color', 'greyLight')};
+  height:12.5rem;
+`
 
-const HtmlAnswer = styled.li`
+const HtmlAnswer = styled.div`
   background-color: ${themeGet('color', 'white')};
 
-  margin: 2rem;
   display:block;
+  position:relative;
+  height:10.5rem;
+`
 
-  min-height:9rem;
+const HtmlAnswerChild = styled.div`
+  display:inline-block;
+  height:100%;
+  text-align:center;
+  vertical-align:middle;
   position:relative;
 
-  div{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:100%;
-    padding:1rem;
-  }
-
-  h1,h2{
-    display:inline-block;
-    width:80%;
-    vertical-align:middle;
-  }
   span{
-    display:inline-block;
-    width:20%;
-    text-align:center;
-    vertical-align:middle;
-    border-left: 2px solid purple;
-    height:100%;
+    display:block;
+    text-shadow: ${themeGet('shadow', 'text')};
+
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    width:100%;
   }
 `
 
-const HtmlCovered = styled.li`
+const HtmlAnswerLeft = styled(HtmlAnswerChild)`
+  width:calc(100% - 110px);
+
+  box-shadow: inset 3px 3px 8px 0 rgba(0, 84, 153, 0.7);
+  background-image: linear-gradient(to top, #006dc7, #005499);
+
+  font-size:4rem;
+  line-height:4.5rem;
+`
+
+const HtmlAnswerRight = styled(HtmlAnswerChild)`
+  width:110px;
+
+  box-shadow: inset -3px 3px 8px 0 #005499;
+  background-image: linear-gradient(to bottom, #0090ff, #006dc7);
+
+  font-size:7rem;
+`
+
+
+const HtmlCovered = styled.div`
+  height:10.5rem;
   cursor: pointer;
-  background-color: ${themeGet('color', 'blue')};
+  padding:1rem;
+  box-shadow: inset 3px 3px 8px 0 ${themeGet('color', 'blueDark')};
+  ${'' /* border: solid 4px ${themeGet('color', 'greyDark')}; */}
+  background-blend-mode: overlay;
+  background-image: linear-gradient(
+    to bottom, 
+    ${themeGet('color', 'blueLight')}, 
+    ${themeGet('color', 'blue')}), 
+    radial-gradient(circle at 50% 0, ${themeGet('color', 'teal')}, ${themeGet('color', 'blue')});
+
   color: ${themeGet('color', 'white')};
   text-align:center;
 
-  margin: 2rem;
   padding: 1rem;
-  min-height:9rem;
-  display:block;
-  position:relative;
 
   div{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:100%;
+    margin: 0 auto;
+    margin-top:-.5rem;
+
+    border-radius:57px;
+    width: 127px;
+    height: 96px;
+    box-shadow: inset 0 5px 6px 0 rgba(0, 0, 0, 0.4);
+    border: solid 2px #007ee6;
+    background-color: #005499;
   }
 
   h1{
+    margin-top:2.25rem;
     width:100%;
     vertical-align:middle;
   }
@@ -69,20 +103,26 @@ class Answer extends Component {
   render(){
     if(this.props.revealed){
       return(
-        <HtmlAnswer>
-          <div >
-            <h2>{this.props.title}</h2>
-            <span>{this.props.score}</span>
-          </div>
-        </HtmlAnswer>
+        <HtmlContainer>
+          <HtmlAnswer>
+            <HtmlAnswerLeft>
+              <span>{this.props.title}</span>
+            </HtmlAnswerLeft>
+            <HtmlAnswerRight>
+              <span>{this.props.score}</span>
+            </HtmlAnswerRight>
+          </HtmlAnswer>
+        </HtmlContainer>
       );
     }else{
       return(
-        <HtmlCovered onClick={this.props.onClick}>
-          <div >
-            <h1>{this.props.label}</h1>
-          </div>
-        </HtmlCovered>
+        <HtmlContainer>
+          <HtmlCovered onClick={this.props.onClick}>
+            <div >
+              <h1>{this.props.label}</h1>
+            </div>
+          </HtmlCovered>
+        </HtmlContainer>
       );
     }
 

@@ -10,25 +10,25 @@
       "title": "Name a reason you might get rid of an old family heirloom.",
       "answers":[
         {
-          "value": "Broken",
-          "points": 29
+          "value": "BROKEN",
+          "points": 20
         },{
-          "value": "Ugly",
+          "value": "UGLY",
           "points": 22
         },{
-          "value": "Divorce",
+          "value": "DIVORCE",
           "points": 18
         },{
-          "value": "Sell / Need money",
+          "value": "SELL / NEED MONEY",
           "points": 12
         },{
-          "value": "Too much stuff",
+          "value": "TOO MUCH STUFF",
           "points": 10
         },{
-          "value": "Family feud",
+          "value": "FAMILY FEUD",
           "points": 5
         },{
-          "value": "Moving",
+          "value": "MOVING",
           "points": 2
         }
       ]

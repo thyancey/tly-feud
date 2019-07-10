@@ -16,19 +16,21 @@ const soundHorn = new UIfx({asset: SoundHorn});
 
 const HtmlContainer = styled.div`
   position:absolute;
-  left:10%;
-  top:10%;
-  right:10%;
-  bottom:10%;
+  left:.5rem;
+  top:.5rem;
+  right:.5rem;
+  bottom:.5rem;
   overflow:hidden;
+  padding:1rem;
 
   display: grid;
-  grid-template-columns: 15% 1fr 15%;
-  grid-template-rows: 15% 1fr 15%;
+  grid-template-columns: 21rem 1fr 21rem;
+  grid-template-rows: 21rem 1fr 1fr;
 
-  border-radius: 3rem;
+  border-radius: 10rem;
 
-  background-color:  ${themeGet('color', 'purple')};
+  background-color:  ${themeGet('color', 'tealDark')};
+  border: 1rem solid ${themeGet('color', 'tealLight')};
   color: ${themeGet('color', 'blue')};
 `
 
@@ -39,15 +41,16 @@ const HtmlAnswerGrid = styled.div`
   display:grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
+  padding:2rem;
+  border-radius:3.2rem;
   
-  border:.5rem solid red;
+  background-color:  ${themeGet('color', 'greyDark')};
 `
 
 const HtmlAnswerColumn = styled.ul`
   grid-column: 1 / span 2;
   grid-row: 1 / span 1;
 
-  border: 2px solid white;
   height:100%;
 
   margin:0;
@@ -56,6 +59,47 @@ const HtmlAnswerColumn = styled.ul`
 
 const HtmlAnswerColumnDouble = styled(HtmlAnswerColumn)`
   grid-column: ${props => props.position} / span 1;
+`
+
+const HtmlRoundBox = styled.div`
+  grid-column: 2 / span 1;
+  grid-row: 1 / span 1;
+
+`
+
+
+const HtmlRoundLabel = styled.div`
+  font-size: 3rem;
+  height:5rem;
+  text-align:center;
+`
+
+const HtmlRoundTitle = styled.div`
+  height:calc(100% - 5rem);
+  font-size: 5rem;
+  margin-left:10%;
+  width:80%;
+  border-radius: 2rem 2rem 0 0;
+  background-color: ${themeGet('color', 'greyDark')};
+  padding:1.5rem;
+  padding-bottom:0;
+  
+  text-shadow: ${themeGet('shadow', 'text')};
+
+  div{
+    height:100%;
+    padding:1rem 2rem;
+    border-radius: 1rem 1rem 0 0;
+    background-image: linear-gradient(to bottom, #0090ff, #006dc7);
+
+    position:relative;
+
+    span{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+    }
+  }
 `
 
 
@@ -76,12 +120,29 @@ const HtmlFooter = styled.div`
   grid-column: 1 / span 3;
   grid-row: 3 / span 1;
 
-  top:50%;
-  transform: translateY(-50%);
   position:absolute;
+  bottom:0;
   width:100%;
   text-align:center;
-  border:.5rem solid blue;
+`
+
+const HtmlFooterChild = styled.div`
+  display:inline-block;
+  width:50%;
+`
+
+const HtmlFooterLeft = styled(HtmlFooterChild)`
+
+`
+
+const HtmlFooterRight = styled(HtmlFooterChild)`
+
+`
+
+const HtmlButtonChild = styled.div`
+  color:white;
+  display:inline-block;
+  margin:0rem 2rem;
 `
 
 class Scoreboard extends Component {
@@ -140,7 +201,7 @@ class Scoreboard extends Component {
               )).map((s, i) => (
                 <Answer 
                   key={i} 
-                  label={i + 1}
+                  label={i + 1 + Math.ceil(surveyData.answers.length / 2)}
                   revealed={s.revealed}
                   title={s.value} 
                   score={s.points} 
@@ -177,12 +238,34 @@ class Scoreboard extends Component {
     this.props.endRound(this.props.survey.score);
   }
 
+  renderRoundBox(survey){
+    if(!survey){
+      return (
+        <HtmlRoundBox>
+          <span></span>
+        </HtmlRoundBox>
+      );
+    }else{
+      return (
+        <HtmlRoundBox>
+          <HtmlRoundLabel>
+            <span>{'Round 1'}</span>
+          </HtmlRoundLabel>
+          <HtmlRoundTitle>
+            <div>
+              <span>{survey.title}</span>
+            </div>
+          </HtmlRoundTitle>
+        </HtmlRoundBox>
+      );
+    }
+
+  }
 
   render(){
     return(
       <HtmlContainer id="scoreboard" >
-        { this.renderTimer() }
-        <h1>{this.props.title}</h1>
+        { this.renderRoundBox(this.props.survey) }
         <Scorebox 
           position="left" 
           active={this.props.activeTeam === 'left'}
@@ -199,8 +282,22 @@ class Scoreboard extends Component {
           strikes={this.props.rightStrikes } 
           onClick={() => this.props.setActiveTeam('right')} />
         <HtmlFooter>
-          <h3>{this.props.survey && this.props.survey.title}</h3>
-          <p>{`MULTIPLIER: X${this.props.multiplier}`}</p>
+          <HtmlFooterLeft>
+            <HtmlButtonChild>
+              {'Hide question'}
+            </HtmlButtonChild>
+            <HtmlButtonChild>
+              {'Start timer'}
+            </HtmlButtonChild>
+          </HtmlFooterLeft>
+          <HtmlFooterRight>
+            <HtmlButtonChild>
+              {'Award points'}
+            </HtmlButtonChild>
+            <HtmlButtonChild>
+              {'Go to next round'}
+            </HtmlButtonChild>
+          </HtmlFooterRight>
         </HtmlFooter>
       </HtmlContainer>
     );
