@@ -10,6 +10,16 @@ export const setData = (data) => {
   }
 }
 
+export const SET_SHEET_DATA = 'SET_SHEET_DATA';
+export const setSheetData = (data) => {
+  return dispatch => {
+    dispatch({
+      type: SET_SHEET_DATA,
+      payload: data
+    });
+  }
+}
+
 export const SET_TEAMS = 'SET_TEAMS';
 export const setTeams = (teamLeft, teamRight) => {
   return dispatch => {

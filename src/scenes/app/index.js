@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import CsvParse from 'csv-parse';
 
-import { setData, endRound, startRound } from 'store/actions/index.js';
+import { setData, setSheetData, endRound, startRound } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
 import Scoreboard from 'scenes/scoreboard';
 import Debug from 'scenes/debug';
@@ -31,6 +32,10 @@ class App extends Component {
     super();
 
     this.loadStoreData();
+
+    global.loadSurveyData = (sheetId, tabId) => {
+      this.loadSheetData(sheetId, tabId);
+    }
   }
 
   setDefaultData(){
@@ -63,6 +68,7 @@ class App extends Component {
     }
   }
 
+
   loadStoreData(){
     const url = './data.json';
     console.log(`reading app data from '${url}'`);
@@ -86,6 +92,31 @@ class App extends Component {
           this.setDefaultData();
         });
   }
+
+  loadSheetData(sheetId, tabId){
+    const url = `https://docs.google.com/spreadsheets/d/e/${sheetId}/pub?gid=${tabId}&output=csv`;
+
+    fetch(url)
+      .then(response => {
+          const csv = response.clone().text();
+          return csv;
+        }, 
+        err => {
+          console.error('Error fretching url', err);
+        }) //- bad url responds with 200/ok? so this doesnt get thrown
+      .then(csv => {
+          const parsed = CsvParse(csv, {
+          }, (err, output) => {
+            console.log('sheet data was read successfully')
+            this.props.setSheetData(output);
+            return output;
+          });
+        }, 
+        err => {
+          console.error('Error parsing sheet CSV (or the url was bad)', err);
+        });
+  }
+
 
   render(){
     return(
@@ -115,7 +146,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { setData, endRound, startRound },
+    { setData, setSheetData, endRound, startRound },
     dispatch
   )
 
