@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { themeGet } from 'themes/';
 import { throwStrike, showStrike, revertStrike, endRound, startRound } from 'store/actions';
 
-import SoundBuzzer from 'assets/sounds/buzzer.wav';
+import SoundStrike from 'assets/sounds/strike.wav';
 import UIfx from 'uifx';
 
-const soundBuzzer = new UIfx({asset: SoundBuzzer});
+const soundStrike = new UIfx({asset: SoundStrike});
 
 const HtmlDebug = styled.div`
   cursor:pointer;
@@ -48,7 +48,7 @@ const HtmlEndRoundButton = styled(HtmlStrikeButton)`
 class Debug extends Component {
 
   throwStrike(){
-    soundBuzzer.setVolume(.5).play();
+    soundStrike.setVolume(.5).play();
     this.props.showStrike(throwStrike, null, true);
   }
   revertStrike(){

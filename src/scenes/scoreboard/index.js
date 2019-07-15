@@ -9,9 +9,9 @@ import Scorebox from './scorebox';
 import { startRound, revealAnswer, incrementScore, endRound, setActiveTeam } from 'store/actions';
 import { createSelector_getSurvey } from 'store/selectors';
 
-import SoundHorn from 'assets/sounds/bikehorn.wav';
+import SoundReveal from 'assets/sounds/reveal.wav';
 import UIfx from 'uifx';
-const soundHorn = new UIfx({asset: SoundHorn});
+const soundReveal = new UIfx({asset: SoundReveal});
 
 
 const HtmlContainer = styled.div`
@@ -230,7 +230,7 @@ class Scoreboard extends Component {
   }
 
   onAnswerClick(answerIdx){
-    soundHorn.setVolume(.5).play();
+    soundReveal.setVolume(.5).play();
     this.props.revealAnswer(answerIdx);
   }
 
