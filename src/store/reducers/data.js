@@ -26,7 +26,7 @@ const SHEET = {
 
 const getSurveyObj = (idx, start, end, csvData) => {
   const resp = {
-    id: String(idx + 1),
+    id: idx + 1,
     title: csvData[start][SHEET.SURVEY],
     multiplier: +csvData[start][SHEET.MULTIPLIER],
     answers:[]

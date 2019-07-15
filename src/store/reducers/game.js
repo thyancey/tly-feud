@@ -1,6 +1,7 @@
 import { 
   START_ROUND,
   END_ROUND,
+  SET_SHEET_DATA,
   ADVANCE_ROUND,
   REVEAL_ANSWER,
   INCREMENT_SCORE,
@@ -37,6 +38,20 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SET_SHEET_DATA:{
+      const parsedData = action.payload;
+      if(!parsedData){
+        return {
+          ...state
+        }
+      }else{
+        return {
+          ...state,
+          roundId: 1
+        }
+      }
+    }
+
     case START_ROUND:{
       console.log('START_ROUND', action.payload)
       const now = new Date().getTime();
