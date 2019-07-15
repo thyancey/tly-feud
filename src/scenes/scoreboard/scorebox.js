@@ -84,7 +84,6 @@ const HtmlStrikeContainer = styled.div`
 
   >div{
     position:absolute;
-    width:100%;
     top:2rem;
     text-align:left;
   }
@@ -99,6 +98,7 @@ const HtmlStrikeBoxes = styled.div`
     width:5rem;
     height:5rem;
     border: .5rem solid ${themeGet('color', 'greyDark')};
+    
   }
 `
 
@@ -131,7 +131,7 @@ class Scorebox extends Component {
   renderStrikes(numStrikes){
     const strikes = [];
     for(let i = 0; i < numStrikes; i++){
-      strikes.push(<HtmlStrike key={i}>{'X'}</HtmlStrike>);
+      strikes.push(<HtmlStrike key={i} onClick={() => this.props.onRemoveStrike()}>{'X'}</HtmlStrike>);
     }
     return strikes;
   }
@@ -150,9 +150,9 @@ class Scorebox extends Component {
         </HtmlTop>
         <HtmlStrikeContainer>
           <HtmlStrikeBoxes>
-            <div/>
-            <div/>
-            <div/>
+            <div onClick={() => this.props.onAddStrike()} />
+            <div onClick={() => this.props.onAddStrike()} />
+            <div onClick={() => this.props.onAddStrike()} />
           </HtmlStrikeBoxes>
           <HtmlStrikes>
             { this.renderStrikes(this.props.strikes) }

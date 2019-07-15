@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import { themeGet } from 'themes/';
 import Answer from './answer';
 import Scorebox from './scorebox';
-import { startRound, revealAnswer, incrementScore, endRound, setActiveTeam } from 'store/actions';
+import { startRound, advanceRound, revealAnswer, incrementScore, endRound, setActiveTeam, throwStrike, showStrike, revertStrike } from 'store/actions';
 import { createSelector_getSurvey } from 'store/selectors';
 
 import SoundReveal from 'assets/sounds/reveal.wav';
+import SoundStrike from 'assets/sounds/strike.wav';
 import UIfx from 'uifx';
 const soundReveal = new UIfx({asset: SoundReveal});
+const soundStrike = new UIfx({asset: SoundStrike});
 
 
 const HtmlContainer = styled.div`
@@ -140,9 +142,14 @@ const HtmlFooterRight = styled(HtmlFooterChild)`
 `
 
 const HtmlButtonChild = styled.div`
+  cursor:pointer;
   color:white;
   display:inline-block;
   margin:0rem 2rem;
+
+  &:hover{
+    color: ${themeGet('color', 'blueLight')};
+  }
 `
 
 class Scoreboard extends Component {
@@ -151,9 +158,6 @@ class Scoreboard extends Component {
   }
 
   componentDidMount(){
-    if(!this.props.roundId){
-      this.startRound('1');
-    }
   }
 
   renderSurvey(surveyData){
@@ -262,6 +266,14 @@ class Scoreboard extends Component {
 
   }
 
+  throwStrike(){
+    soundStrike.setVolume(.5).play();
+    this.props.showStrike(throwStrike, null, true);
+  }
+  revertStrike(){
+    this.props.revertStrike();
+  }
+
   render(){
     return(
       <HtmlContainer id="scoreboard" >
@@ -272,6 +284,8 @@ class Scoreboard extends Component {
           name={this.props.teams.left.name} 
           score={this.props.leftScore} 
           strikes={this.props.leftStrikes } 
+          onAddStrike={() => this.throwStrike()}
+          onRemoveStrike={() => this.revertStrike()}
           onClick={() => this.props.setActiveTeam('left')} />
         { this.renderSurvey(this.props.survey) }
         <Scorebox
@@ -280,6 +294,8 @@ class Scoreboard extends Component {
           name={this.props.teams.right.name} 
           score={this.props.rightScore} 
           strikes={this.props.rightStrikes } 
+          onAddStrike={() => this.throwStrike()}
+          onRemoveStrike={() => this.revertStrike()}
           onClick={() => this.props.setActiveTeam('right')} />
         <HtmlFooter>
           <HtmlFooterLeft>
@@ -291,10 +307,12 @@ class Scoreboard extends Component {
             </HtmlButtonChild>
           </HtmlFooterLeft>
           <HtmlFooterRight>
-            <HtmlButtonChild>
-              {'Award points'}
-            </HtmlButtonChild>
-            <HtmlButtonChild>
+            { this.props.activeTeam && (
+              <HtmlButtonChild onClick={() => this.props.endRound()}>
+                {'Award points'}
+              </HtmlButtonChild>
+            )}
+            <HtmlButtonChild onClick={() => this.props.advanceRound()}>
               {'Go to next round'}
             </HtmlButtonChild>
           </HtmlFooterRight>
@@ -313,6 +331,7 @@ const makeMapStateToProps = () => {
     roundId: state.game.roundId,
     multiplier: state.game.multiplier,
     leftScore: state.game.teams.left.score,
+    roundActive: state.game.roundActive,
     leftStrikes: state.game.teams.left.strikes,
     rightScore: state.game.teams.right.score,
     rightStrikes: state.game.teams.right.strikes,
@@ -324,7 +343,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { startRound, revealAnswer, incrementScore, endRound, setActiveTeam },
+    { startRound, advanceRound, revealAnswer, incrementScore, endRound, setActiveTeam, throwStrike, showStrike, revertStrike },
     dispatch
   )
 

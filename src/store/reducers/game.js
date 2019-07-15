@@ -1,10 +1,12 @@
 import { 
   START_ROUND,
   END_ROUND,
+  ADVANCE_ROUND,
   REVEAL_ANSWER,
   INCREMENT_SCORE,
   THROW_STRIKE,
   REVERT_STRIKE,
+  AWARD_POINTS,
   SET_ACTIVE_TEAM
 } from '../actions';
 
@@ -13,9 +15,10 @@ import {
 } from '../actions/transition';
  
 const initialState = {
-  roundId: null,
+  roundId: 0,
   activeTeam: null,
   roundStart: null,
+  roundActive: false,
   revealed: [],
   multiplier: 2,
   teams: {
@@ -44,7 +47,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        roundId: action.payload,
+        roundActive: true,
         roundStart: now,
         revealed: [],
         teams:teams,
@@ -52,17 +55,29 @@ export default (state = initialState, action) => {
         activeTeam: null
       }
     }
-    
-    case END_ROUND:{
+
+    case AWARD_POINTS:{
       const teams = state.teams;
-      if(state.activeTeam){
-        teams[state.activeTeam].score += action.payload;
-      }
+      teams[action.payload.team].score += action.payload.points;
 
       return {
         ...state,
-        roundStart: -1,
         teams: teams
+      }
+    }
+    
+    case END_ROUND:{
+      console.log('END_ROUND')
+      return {
+        ...state,
+        roundActive: false
+      }
+    }
+
+    case ADVANCE_ROUND:{
+      return {
+        ...state,
+        roundId: state.roundId + 1
       }
     }
 

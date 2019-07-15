@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { themeGet } from 'themes/';
-import { throwStrike, showStrike, revertStrike, endRound, startRound } from 'store/actions';
+import { throwStrike, showStrike, revertStrike, endRound, advanceRound } from 'store/actions';
 
 import SoundStrike from 'assets/sounds/strike.wav';
 import UIfx from 'uifx';
@@ -61,10 +61,10 @@ class Debug extends Component {
         { this.props.activeTeam && (
           <div>
           <h2>{'THE DEBUG DADDY'}</h2>
-          <HtmlEndRoundButton onClick={() => this.props.onEndOfRound()}>
+          <HtmlEndRoundButton onClick={() => this.props.endRound()}>
             <span>{'End round and award points'}</span>
           </HtmlEndRoundButton>
-          <HtmlEndRoundButton onClick={() => this.props.onEndOfRound(true)}>
+          <HtmlEndRoundButton onClick={() => this.props.advanceRound()}>
             <span>{'Next round'}</span>
           </HtmlEndRoundButton>
           <HtmlRevertStrikeButton onClick={() => this.revertStrike()}>
@@ -87,7 +87,7 @@ const mapStateToProps = ({ game }) => ({
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { throwStrike, showStrike, revertStrike, endRound, startRound },
+    { throwStrike, showStrike, revertStrike, endRound, advanceRound },
     dispatch
   )
 

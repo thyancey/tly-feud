@@ -75,6 +75,16 @@ export const endRound = (payload) => {
   }
 }
 
+export const ADVANCE_ROUND = 'ADVANCE_ROUND';
+export const advanceRound = (payload) => {
+  return dispatch => {
+    dispatch({
+      type: ADVANCE_ROUND,
+      payload: payload
+    });
+  }
+}
+
 export const INCREMENT_SCORE = 'INCREMENT_SCORE';
 export const incrementScore = (team, points) => {
   return dispatch => {
@@ -105,6 +115,19 @@ export const revertStrike = (payload) => {
     dispatch({
       type: REVERT_STRIKE,
       payload: payload
+    });
+  }
+}
+
+export const AWARD_POINTS = 'AWARD_POINTS';
+export const awardPoints = (team, points) => {
+  return dispatch => {
+    dispatch({
+      type: AWARD_POINTS,
+      payload: {
+        team: team,
+        points: points
+      }
     });
   }
 }

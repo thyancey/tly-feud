@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import CsvParse from 'csv-parse';
 
-import { setData, setSheetData, endRound, startRound } from 'store/actions/index.js';
+import { setData, setSheetData } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
 import Scoreboard from 'scenes/scoreboard';
 import Debug from 'scenes/debug';
 import Modal from 'scenes/modal';
 import TestImage from './assets/loading.gif';
+import GameController from './gamecontroller';
 import { createSelector_getSurvey } from 'store/selectors';
 
 require('themes/app.scss');
@@ -32,6 +33,7 @@ class App extends Component {
     super();
 
     this.loadStoreData();
+    this.refGameController = React.createRef();
 
     global.loadSurveyData = (sheetId, tabId) => {
       this.loadSheetData(sheetId, tabId);
@@ -42,30 +44,6 @@ class App extends Component {
     this.props.setData({
       title: 'testing'
     });
-  }
-
-  getNextRoundId(){
-    const foundIdx = this.props.surveys.findIndex(s => s.id === this.props.roundId);
-    if(foundIdx > -1){
-      let nextIdx = 0;
-      if(this.props.surveys[foundIdx + 1]){
-        nextIdx = foundIdx + 1;
-      }
-
-      return this.props.surveys[nextIdx].id;
-    }else{
-      return this.props.roundId;
-    }
-  }
-  
-
-  onEndOfRound(advance){
-    if(advance){
-      const newId = this.getNextRoundId();
-      this.props.startRound(newId);
-    }else{
-      this.props.endRound(this.props.survey.score);
-    }
   }
 
 
@@ -117,13 +95,13 @@ class App extends Component {
         });
   }
 
-
   render(){
     return(
       <HtmlApp id="app" tabIndex="-1">
         <Modal />
-        <Debug onEndOfRound={(advance) => this.onEndOfRound(advance)}/>
-        <Scoreboard onEndOfRound={(advance) => this.onEndOfRound(advance)}/>
+        <GameController />
+        <Debug />
+        <Scoreboard />
       </HtmlApp>
     );
   }
@@ -146,7 +124,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { setData, setSheetData, endRound, startRound },
+    { setData, setSheetData },
     dispatch
   )
 
