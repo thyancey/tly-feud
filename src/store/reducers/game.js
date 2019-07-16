@@ -4,6 +4,7 @@ import {
   SET_SHEET_DATA,
   ADVANCE_ROUND,
   REVEAL_ANSWER,
+  TOGGLE_QUESTION,
   INCREMENT_SCORE,
   THROW_STRIKE,
   REVERT_STRIKE,
@@ -21,6 +22,7 @@ const initialState = {
   roundStart: null,
   roundActive: false,
   revealed: [],
+  questionShowing: false,
   multiplier: 2,
   teams: {
     left: {
@@ -78,6 +80,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         teams: teams
+      }
+    }
+
+    case TOGGLE_QUESTION:{
+      return {
+        ...state,
+        questionShowing: action.payload || false
       }
     }
     

@@ -133,18 +133,26 @@ export const awardPoints = (team, points) => {
 }
 
 
+export const TOGGLE_QUESTION = 'TOGGLE_QUESTION';
+export const toggleQuestion = (toggleState) => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_QUESTION,
+      payload: toggleState
+    });
+  }
+}
+
 
 export const SHOW_STRIKE = 'SHOW_STRIKE';
 export const showStrike = (action, payload, delayed) => {
 
   if(!delayed){
     return dispatch => {
-      // throwStrike()(dispatch);
       action(payload)(dispatch);
     }
   }else{
     return dispatch => {
-      // throwStrike()(dispatch);
       strikeTransition(action, payload, dispatch);
     }
   }
@@ -173,3 +181,55 @@ export const strikeTransition = (action, payload, dispatch) => {
     }
   ])(dispatch);
 }
+
+
+
+export const THROW_TIMEUP = 'THROW_TIMEUP';
+export const throwTimeUp = (payload) => {
+  return dispatch => {
+    dispatch({
+      type: THROW_TIMEUP,
+      payload: payload
+    });
+  }
+}
+
+
+export const SHOW_TIMEUP = 'SHOW_TIMEUP';
+export const showTimeUp = (payload, delayed) => {
+
+  if(!delayed){
+    return dispatch => {
+      throwTimeUp(payload)(dispatch);
+    }
+  }else{
+    return dispatch => {
+      timeupTransition(throwTimeUp, payload, dispatch);
+    }
+  }
+}
+
+export const timeupTransition = (action, payload, dispatch) => {
+  chainActions([
+    {
+      delay: 0,
+      action: setTransition,
+      payload: {
+        label: 'timeupPopupOpen'
+      }
+    },
+    {
+      delay: 0,
+      action: action,
+      payload: payload
+    },
+    {
+      delay: 1000,
+      action: setTransition,
+      payload: {
+        label: ''
+      }
+    }
+  ])(dispatch);
+}
+

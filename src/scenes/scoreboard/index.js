@@ -6,12 +6,21 @@ import { connect } from 'react-redux';
 import { themeGet } from 'themes/';
 import Answer from './answer';
 import Scorebox from './scorebox';
-import { startRound, advanceRound, revealAnswer, incrementScore, endRound, setActiveTeam, throwStrike, showStrike, revertStrike } from 'store/actions';
+import GameControls from './controls';
+
+import { 
+  startRound, 
+  revealAnswer, 
+  setActiveTeam, 
+  throwStrike, 
+  showStrike, 
+  revertStrike 
+} from 'store/actions';
 import { createSelector_getSurvey } from 'store/selectors';
 
+import UIfx from 'uifx';
 import SoundReveal from 'assets/sounds/reveal.wav';
 import SoundStrike from 'assets/sounds/strike.wav';
-import UIfx from 'uifx';
 const soundReveal = new UIfx({asset: SoundReveal});
 const soundStrike = new UIfx({asset: SoundStrike});
 
@@ -104,61 +113,7 @@ const HtmlRoundTitle = styled.div`
   }
 `
 
-
-
-const HtmlTimer = styled.div`
-  grid-column: 2 / span 1;
-  grid-row: 1 / span 1;
-
-  top:50%;
-  transform: translateY(-50%);
-  position:absolute;
-  width:100%;
-  text-align:center;
-  border:.5rem solid blue;
-`
-
-const HtmlFooter = styled.div`
-  grid-column: 1 / span 3;
-  grid-row: 3 / span 1;
-
-  position:absolute;
-  bottom:0;
-  width:100%;
-  text-align:center;
-`
-
-const HtmlFooterChild = styled.div`
-  display:inline-block;
-  width:50%;
-`
-
-const HtmlFooterLeft = styled(HtmlFooterChild)`
-
-`
-
-const HtmlFooterRight = styled(HtmlFooterChild)`
-
-`
-
-const HtmlButtonChild = styled.div`
-  cursor:pointer;
-  color:white;
-  display:inline-block;
-  margin:0rem 2rem;
-
-  &:hover{
-    color: ${themeGet('color', 'blueLight')};
-  }
-`
-
 class Scoreboard extends Component {
-  constructor(){
-    super();
-  }
-
-  componentDidMount(){
-  }
 
   renderSurvey(surveyData){
     if(!surveyData){
@@ -220,15 +175,6 @@ class Scoreboard extends Component {
     }
   }
 
-  renderTimer(startTime, endTime){
-    const time = '00:13';
-    return (
-      <HtmlTimer onClick={() => this.onTimerClick()}>
-        <h2>{time}</h2>
-      </HtmlTimer>
-    );
-  }
-
   startRound(id){
     this.props.startRound(id);
   }
@@ -238,11 +184,7 @@ class Scoreboard extends Component {
     this.props.revealAnswer(answerIdx);
   }
 
-  onTimerClick(){
-    this.props.endRound(this.props.survey.score);
-  }
-
-  renderRoundBox(survey){
+  renderRoundBox(survey, questionShowing){
     if(!survey){
       return (
         <HtmlRoundBox>
@@ -253,11 +195,13 @@ class Scoreboard extends Component {
       return (
         <HtmlRoundBox>
           <HtmlRoundLabel>
-            <span>{'Round 1'}</span>
+            <span>{`Round ${survey.id}`}</span>
           </HtmlRoundLabel>
           <HtmlRoundTitle>
             <div>
-              <span>{survey.title}</span>
+              { questionShowing && (
+                <span>{survey.title}</span>
+              )}
             </div>
           </HtmlRoundTitle>
         </HtmlRoundBox>
@@ -277,7 +221,7 @@ class Scoreboard extends Component {
   render(){
     return(
       <HtmlContainer id="scoreboard" >
-        { this.renderRoundBox(this.props.survey) }
+        { this.renderRoundBox(this.props.survey, this.props.questionShowing) }
         <Scorebox 
           position="left" 
           active={this.props.activeTeam === 'left'}
@@ -297,26 +241,7 @@ class Scoreboard extends Component {
           onAddStrike={() => this.throwStrike()}
           onRemoveStrike={() => this.revertStrike()}
           onClick={() => this.props.setActiveTeam('right')} />
-        <HtmlFooter>
-          <HtmlFooterLeft>
-            <HtmlButtonChild>
-              {'Hide question'}
-            </HtmlButtonChild>
-            <HtmlButtonChild>
-              {'Start timer'}
-            </HtmlButtonChild>
-          </HtmlFooterLeft>
-          <HtmlFooterRight>
-            { this.props.activeTeam && (
-              <HtmlButtonChild onClick={() => this.props.endRound()}>
-                {'Award points'}
-              </HtmlButtonChild>
-            )}
-            <HtmlButtonChild onClick={() => this.props.advanceRound()}>
-              {'Go to next round'}
-            </HtmlButtonChild>
-          </HtmlFooterRight>
-        </HtmlFooter>
+        <GameControls />
       </HtmlContainer>
     );
   }
@@ -335,7 +260,8 @@ const makeMapStateToProps = () => {
     leftStrikes: state.game.teams.left.strikes,
     rightScore: state.game.teams.right.score,
     rightStrikes: state.game.teams.right.strikes,
-    activeTeam: state.game.activeTeam
+    activeTeam: state.game.activeTeam,
+    questionShowing: state.game.questionShowing
   });
 
   return mapStateToProps;
@@ -343,7 +269,14 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { startRound, advanceRound, revealAnswer, incrementScore, endRound, setActiveTeam, throwStrike, showStrike, revertStrike },
+    { 
+      startRound, 
+      revealAnswer, 
+      setActiveTeam, 
+      throwStrike, 
+      showStrike, 
+      revertStrike 
+    },
     dispatch
   )
 

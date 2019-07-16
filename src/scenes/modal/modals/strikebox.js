@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { themeGet } from 'themes/';
-import IconClear from 'assets/icon-clear.svg';
 
 const HtmlStrikeBox = styled.div`
   position:absolute;
@@ -15,11 +14,18 @@ const HtmlImg = styled.img`
   height:20rem;
 `
 
+const HtmlStrikeX = styled.p`
+  font-size:50rem;
+  color: ${themeGet('color', 'tealLight')};
+  display:inline-block;
+  margin:6rem;
+`
+
 class StrikeBox extends Component {
   renderStrikes(numStrikes){
     const strikes = [];
     for(let i = 0; i < numStrikes; i++){
-      strikes.push(<HtmlImg key={i} src={IconClear} />)
+      strikes.push(<HtmlStrikeX key={i}>{'X'}</HtmlStrikeX>)
     }
     return strikes;
   }

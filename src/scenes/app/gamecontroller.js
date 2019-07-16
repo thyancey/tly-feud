@@ -37,9 +37,9 @@ class GameController extends Component {
       this.nextRound()
     }
 
-    if(prevProps.roundActive && !this.props.roundActive){
-      this.finalizeRound(this.props.activeTeam, this.props.survey.score);
-    }
+    // if(prevProps.roundActive && !this.props.roundActive){
+    //   this.finalizeRound(this.props.activeTeam, this.props.survey.score);
+    // }
 
     if(this.props.survey){
       if(prevProps.revealed.length !== this.props.revealed.length){

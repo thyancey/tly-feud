@@ -6,15 +6,16 @@ import styled from 'styled-components';
 import { themeGet } from 'themes/';
 
 import StrikeBox from './modals/strikebox';
+import TimeUp from './modals/timeup';
 
 import { } from 'store/actions';
 
 const HtmlModalContainer = styled.div`
   position: absolute;
-  left:2rem;
-  top:2rem;
-  right:2rem;
-  bottom:2rem;
+  left:1.5rem;
+  top:1.5rem;
+  right:1.5rem;
+  bottom:1.5rem;
 `
 
 const HtmlModal = styled.div`
@@ -22,8 +23,8 @@ const HtmlModal = styled.div`
   width:100%;
   height:100%;
 
-  background-color:blue;
-  border-radius: 2rem;
+  background-color: ${themeGet('color', 'red')};
+  border-radius: 9rem;
   z-index:1;
 `
 
@@ -37,6 +38,14 @@ class ModalContainer extends Component {
         <HtmlModalContainer >
           <HtmlModal>
             <StrikeBox numStrikes={numStrikes}/>
+          </HtmlModal>
+        </HtmlModalContainer>
+      );
+    }else if(this.props.transitionLabel === 'timeupPopupOpen'){
+      return(
+        <HtmlModalContainer >
+          <HtmlModal>
+            <TimeUp />
           </HtmlModal>
         </HtmlModalContainer>
       );
