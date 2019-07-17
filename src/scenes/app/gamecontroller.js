@@ -25,11 +25,10 @@ class GameController extends Component {
 
 
   nextRound(){
-    console.log('nextRound', this.props.roundId, this.props.surveys.length)
     if(this.props.roundId <= this.props.surveys.length){
       this.props.startRound(this.props.roundId);
     }else{
-      console.log('GAME IS OVER')
+      console.log('GAME IS OVER');
     }
   }
 

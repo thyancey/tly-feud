@@ -24,7 +24,6 @@ const initialState = {
   roundActive: false,
   revealed: [],
   questionShowing: false,
-  multiplier: 2,
   teams: {
     left: {
       name: "",

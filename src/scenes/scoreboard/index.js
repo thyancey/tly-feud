@@ -177,7 +177,6 @@ class Scoreboard extends Component {
   }
 
   onAnswerClick(answerIdx, revealed){
-    console.log('onAnswerCLick', answerIdx, revealed)
     if(revealed){
       this.props.hideAnswer(answerIdx);
     }else{
@@ -197,7 +196,7 @@ class Scoreboard extends Component {
       return (
         <HtmlRoundBox>
           <HtmlRoundLabel>
-            <span>{`Round ${survey.id}`}</span>
+            <span>{`Round ${survey.id} (x${this.props.survey.multiplier})`}</span>
           </HtmlRoundLabel>
           <HtmlRoundTitle>
             <div>
@@ -256,7 +255,6 @@ const makeMapStateToProps = () => {
     title: state.data.title,
     teams: state.game.teams,
     roundId: state.game.roundId,
-    multiplier: state.game.multiplier,
     leftScore: state.game.teams.left.score,
     roundActive: state.game.roundActive,
     leftStrikes: state.game.teams.left.strikes,

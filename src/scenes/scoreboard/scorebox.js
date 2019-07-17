@@ -121,9 +121,11 @@ class Scorebox extends Component {
             <span>{this.props.score}</span>
           </div>
         </HtmlTop>
-        <HtmlStrikeContainer>
-          { this.renderStrikeboxes(this.props.strikes) }
-        </HtmlStrikeContainer>
+        { this.props.strikes !== undefined && (
+          <HtmlStrikeContainer>
+            { this.renderStrikeboxes(this.props.strikes) }
+          </HtmlStrikeContainer>
+        )}
       </HtmlScoreBlock>
     );
   }

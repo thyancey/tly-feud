@@ -6,17 +6,16 @@ export const createSelector_getSurvey = () => {
     [ 
       state => state.data.surveys, 
       state => state.game.roundId, 
-      state => state.game.revealed, 
-      state => state.game.multiplier 
+      state => state.game.revealed
     ],
-    (surveys, roundId, revealed, multiplier) => {
+    (surveys, roundId, revealed) => {
       const foundSurvey = surveys && surveys.find(s => s.id === roundId);
       if(foundSurvey){
         let score = 0;
 
         foundSurvey.answers.map((s, i) => {
           if(revealed.indexOf(i) > -1){
-            score += s.points * multiplier;
+            score += s.points * foundSurvey.multiplier;
 
             s.revealed = true;
             s.idx = i;
@@ -36,6 +35,31 @@ export const createSelector_getSurvey = () => {
       }
 
       return null;
+    }
+  )
+}
+
+export const createSelector_getWinningTeam = () => {
+  return createSelector(
+    [ 
+      state => state.game.teams 
+    ],
+    (teams) => {
+      if(teams.left && teams.right){
+        if(teams.left.score > teams.right.score){
+          return {
+            ...teams.left,
+            position: 'left'
+          };
+        }else{
+          return {
+            ...teams.right,
+            position: 'right'
+          };
+        }  
+      }else{
+        return null;
+      }
     }
   )
 }

@@ -7,6 +7,7 @@ import CsvParse from 'csv-parse';
 import { setData, setSheetData } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
 import Scoreboard from 'scenes/scoreboard';
+import EndScreen from 'scenes/endscreen';
 import Modal from 'scenes/modal';
 import TestImage from './assets/loading.gif';
 import GameController from './gamecontroller';
@@ -99,7 +100,11 @@ class App extends Component {
       <HtmlApp id="app" tabIndex="-1">
         <Modal />
         <GameController />
-        <Scoreboard />
+        { this.props.survey ? (
+          <Scoreboard />
+        ):(
+          <EndScreen />
+        )}
       </HtmlApp>
     );
   }

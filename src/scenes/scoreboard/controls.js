@@ -6,10 +6,17 @@ import { connect } from 'react-redux';
 import { themeGet } from 'themes/';
 import IconForward from 'assets/icons/ic-arrow-forward.svg';
 import IconStar from 'assets/icons/ic-star.svg';
+import IconMusicOn from 'assets/icons/ic-music-on.svg';
+import IconMusicOff from 'assets/icons/ic-music-off.svg';
 import IconVisibility from 'assets/icons/ic-visibility.svg';
 import IconVisibilityOff from 'assets/icons/ic-visibility-off.svg';
+import ReactSound from 'react-sound';
 
 import TimerButton from './timerbutton';
+import SoundTheme from 'assets/sounds/theme.mp3';
+
+import UIfx from 'uifx';
+import SoundKaChing from 'assets/sounds/ka-ching.mp3';
 
 import { 
   awardPoints, 
@@ -18,6 +25,7 @@ import {
   endRound
 } from 'store/actions';
 import { createSelector_getSurvey } from 'store/selectors';
+const soundKaChing = new UIfx({asset: SoundKaChing});
 
 const HtmlFooter = styled.div`
   grid-column: 1 / span 3;
@@ -58,20 +66,23 @@ const HtmlText = styled.span`
   color: ${themeGet('color', 'greyLight')};
   margin-left:1.25rem;
   font-weight:normal;
+
+  transition: color .1s ease-in-out;
 `
 
 class Controls extends Component {
   constructor(){
     super();
-
     this.timer = null;
     this.state = {
       timerActive: false,
-      timerEnd: null
+      timerEnd: null,
+      soundPlaying: false
     };
   }
 
   endRound(){
+    soundKaChing.play();
     this.props.awardPoints(this.props.activeTeam, this.props.survey.score);
     this.props.endRound(); 
   }
@@ -112,9 +123,22 @@ class Controls extends Component {
     }
   }
 
+  toggleMusic(musicState){
+    this.setState({
+      soundPlaying: musicState || false
+    })
+  }
+
   render(){
     return(
       <HtmlFooter>
+        { this.state.soundPlaying && (
+          <ReactSound
+            url={SoundTheme}
+            playStatus={ReactSound.status.PLAYING}
+          />
+        )}
+
         <HtmlFooterChild>
           { this.props.questionShowing ? (
             <HtmlButtonChild onClick={() => this.props.toggleQuestion(false)}>
@@ -127,12 +151,14 @@ class Controls extends Component {
               <HtmlText>{'Show question'}</HtmlText>
             </HtmlButtonChild>
           ) }
-          <HtmlButtonChild>
-            <TimerButton/>
-          </HtmlButtonChild>
+          { this.props.activeTeam && (
+            <HtmlButtonChild>
+              <TimerButton/>
+            </HtmlButtonChild>
+          ) }
         </HtmlFooterChild>
         <HtmlFooterChild>
-          { this.props.activeTeam && (
+          { this.props.activeTeam && this.props.roundActive && (
             <HtmlButtonChild onClick={() => this.endRound()}>
               <HtmlIcon src={IconStar}/>
               <HtmlText>{'Award points'}</HtmlText>
@@ -142,6 +168,17 @@ class Controls extends Component {
             <HtmlIcon src={IconForward}/>
             <HtmlText>{'Go to next round'}</HtmlText>
           </HtmlButtonChild>
+          { this.state.soundPlaying ? (
+            <HtmlButtonChild onClick={() => this.toggleMusic(false)}>
+              <HtmlIcon src={IconMusicOff}/>
+              <HtmlText>{'Turn music off'}</HtmlText>
+            </HtmlButtonChild>
+          ):(
+            <HtmlButtonChild onClick={() => this.toggleMusic(true)}>
+              <HtmlIcon src={IconMusicOn}/>
+              <HtmlText>{'Turn music on'}</HtmlText>
+            </HtmlButtonChild>
+          ) }
         </HtmlFooterChild>
       </HtmlFooter>
     );
@@ -153,6 +190,7 @@ const makeMapStateToProps = () => {
   const mapStateToProps = (state, props) => ({
     survey: getSurvey(state, props),
     activeTeam: state.game.activeTeam,
+    roundActive: state.game.roundActive,
     questionShowing: state.game.questionShowing
   });
 

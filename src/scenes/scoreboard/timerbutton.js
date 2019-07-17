@@ -141,7 +141,6 @@ class TimerButton extends Component {
   }
 }
 
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     { 
@@ -151,6 +150,6 @@ const mapDispatchToProps = dispatch =>
   )
 
 export default connect(
-  () => {},
+  null,
   mapDispatchToProps
 )(TimerButton)
