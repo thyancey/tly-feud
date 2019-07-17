@@ -139,14 +139,20 @@ export default (state = initialState, action) => {
 
     case THROW_STRIKE:{
       const teams = state.teams;
-      teams[state.activeTeam].strikes += 1;
+      if(!teams[state.activeTeam]){
+        return { ...state }
+      }else{
+        if(teams[state.activeTeam].strikes < 3){
+          teams[state.activeTeam].strikes += 1;
+        }
 
-      return {
-        ...state,
-        teams: teams
+        return {
+          ...state,
+          teams: teams
+        }
       }
     }
-
+    
     case REVERT_STRIKE:{
       const teams = state.teams;
       teams[state.activeTeam].strikes -= 1;

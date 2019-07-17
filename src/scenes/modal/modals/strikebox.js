@@ -16,9 +16,10 @@ const HtmlImg = styled.img`
 
 const HtmlStrikeX = styled.p`
   font-size:50rem;
-  color: ${themeGet('color', 'tealLight')};
   display:inline-block;
   margin:6rem;
+  color: ${themeGet('color', 'red')};
+  text-shadow: 8px 7px 20px black;
 `
 
 class StrikeBox extends Component {

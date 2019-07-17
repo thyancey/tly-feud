@@ -8,7 +8,7 @@ import IconTimer from 'assets/icons/ic-timer.svg';
 import IconTimerOff from 'assets/icons/ic-timer-off.svg';
 
 import UIfx from 'uifx';
-import SoundStrike from 'assets/sounds/buzz-in.wav';
+import SoundStrike from 'assets/sounds/strike.wav';
 
 import { 
   showTimeUp

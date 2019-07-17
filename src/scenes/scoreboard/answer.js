@@ -63,7 +63,6 @@ const HtmlCovered = styled.div`
   cursor: pointer;
   padding:1rem;
   box-shadow: inset 3px 3px 8px 0 ${themeGet('color', 'blueDark')};
-  ${'' /* border: solid 4px ${themeGet('color', 'greyDark')}; */}
   background-blend-mode: overlay;
   background-image: linear-gradient(
     to bottom, 
@@ -80,7 +79,7 @@ const HtmlCovered = styled.div`
     margin: 0 auto;
     margin-top:-.5rem;
 
-    border-radius:57px;
+    border-radius:50%;
     width: 127px;
     height: 96px;
     box-shadow: inset 0 5px 6px 0 rgba(0, 0, 0, 0.4);

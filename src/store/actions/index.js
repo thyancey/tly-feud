@@ -182,29 +182,16 @@ export const strikeTransition = (action, payload, dispatch) => {
   ])(dispatch);
 }
 
-
-
-export const THROW_TIMEUP = 'THROW_TIMEUP';
-export const throwTimeUp = (payload) => {
-  return dispatch => {
-    dispatch({
-      type: THROW_TIMEUP,
-      payload: payload
-    });
-  }
-}
-
-
 export const SHOW_TIMEUP = 'SHOW_TIMEUP';
 export const showTimeUp = (payload, delayed) => {
 
   if(!delayed){
     return dispatch => {
-      throwTimeUp(payload)(dispatch);
+      throwStrike(payload)(dispatch);
     }
   }else{
     return dispatch => {
-      timeupTransition(throwTimeUp, payload, dispatch);
+      timeupTransition(throwStrike, payload, dispatch);
     }
   }
 }

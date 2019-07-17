@@ -12,9 +12,11 @@ const HtmlTimeUp = styled.div`
 
 const HtmlMessage = styled.p`
   font-size:20rem;
-  color:${themeGet('color', 'tealLight')};
   display:inline-block;
   margin:6rem;
+  
+  color: ${themeGet('color', 'red')};
+  text-shadow: 8px 7px 20px black;
 `
 
 class TimeUp extends Component {

@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 
 import { themeGet } from 'themes/';
 
+import Strikebox from './strikebox';
 
 const HtmlScoreBlock = styled.div`
   cursor:pointer;
@@ -79,59 +80,22 @@ const HtmlTop = styled.div`
 `
 
 const HtmlStrikeContainer = styled.div`
-  margin-left:1rem;
+  margin-left: -.5rem;
+  margin-top: 2rem;
   position:relative;
-
-  >div{
-    position:absolute;
-    top:2rem;
-    text-align:left;
-  }
-
 `
-
-const HtmlStrikeBoxes = styled.div`
-
-  div{
-    display: inline-block;
-    margin:0 .5rem;
-    width:5rem;
-    height:5rem;
-    border: .5rem solid ${themeGet('color', 'greyDark')};
-    
-  }
-`
-
-const HtmlStrikes = styled.div`
-
-
-`
-
-const HtmlStrike = styled.div`
-  display: inline-block;
-  width:5rem;
-  height:5rem;
-  font-size:5rem;
-  color:red;
-  text-align:center;
-
-  margin: -.5rem .5rem 0 .5rem;
-
-  &:hover{
-    color:white;
-  }
-`
-
 
 class Scorebox extends Component {
   constructor(){
     super();
   }
 
-  renderStrikes(numStrikes){
+  renderStrikeboxes(numStrikes){
     const strikes = [];
-    for(let i = 0; i < numStrikes; i++){
-      strikes.push(<HtmlStrike key={i} onClick={() => this.props.onRemoveStrike()}>{'X'}</HtmlStrike>);
+    for(let i = 1; i < 4; i++){
+      strikes.push(
+        <Strikebox key={i} onRemoveStrike={this.props.onRemoveStrike} onAddStrike={this.props.onAddStrike} isActive={ i <= numStrikes ? true : false } />
+      );
     }
     return strikes;
   }
@@ -149,14 +113,7 @@ class Scorebox extends Component {
           </div>
         </HtmlTop>
         <HtmlStrikeContainer>
-          <HtmlStrikeBoxes>
-            <div onClick={() => this.props.onAddStrike()} />
-            <div onClick={() => this.props.onAddStrike()} />
-            <div onClick={() => this.props.onAddStrike()} />
-          </HtmlStrikeBoxes>
-          <HtmlStrikes>
-            { this.renderStrikes(this.props.strikes) }
-          </HtmlStrikes>
+          { this.renderStrikeboxes(this.props.strikes) }
         </HtmlStrikeContainer>
       </HtmlScoreBlock>
     );

@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { setData, setSheetData, endRound, startRound, awardPoints, advanceRound } from 'store/actions/index.js';
+import {  
+  startRound, 
+  endRound, 
+  awardPoints, 
+  advanceRound,
+  toggleQuestion
+} from 'store/actions/index.js';
 import { createSelector_getSurvey } from 'store/selectors';
 
 
@@ -37,12 +43,12 @@ class GameController extends Component {
       this.nextRound()
     }
 
-    // if(prevProps.roundActive && !this.props.roundActive){
-    //   this.finalizeRound(this.props.activeTeam, this.props.survey.score);
-    // }
-
     if(this.props.survey){
       if(prevProps.revealed.length !== this.props.revealed.length){
+        if(this.props.revealed.length === 1){
+          //- attempt to reveal the title if it hasn't been already
+          this.props.toggleQuestion(true)
+        }
         if(this.props.revealed.length === this.props.survey.answers.length){
           this.props.endRound();
         }
@@ -63,11 +69,7 @@ const makeMapStateToProps = () => {
     survey: getSurvey(state, props),
     surveys: state.data.surveys,
     roundId: state.game.roundId,
-    surveys: state.data.surveys,
     loaded: state.data.loaded,
-    title: state.data.title,
-    activeTeam: state.game.activeTeam,
-    roundActive: state.game.roundActive,
     revealed: state.game.revealed
   });
 
@@ -76,7 +78,13 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { setData, setSheetData, endRound, startRound, awardPoints, advanceRound },
+    { 
+      endRound, 
+      startRound, 
+      awardPoints, 
+      advanceRound,
+      toggleQuestion 
+    },
     dispatch
   )
 
