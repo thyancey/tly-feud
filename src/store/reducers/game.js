@@ -4,6 +4,7 @@ import {
   SET_SHEET_DATA,
   ADVANCE_ROUND,
   REVEAL_ANSWER,
+  HIDE_ANSWER,
   TOGGLE_QUESTION,
   INCREMENT_SCORE,
   THROW_STRIKE,
@@ -122,6 +123,19 @@ export default (state = initialState, action) => {
         return {
           ...state,
           revealed: [].concat(state.revealed, action.payload)
+        }
+      }
+    }
+
+    case HIDE_ANSWER:{
+      if(state.revealed.indexOf(action.payload) > -1){
+        return {
+          ...state,
+          revealed: state.revealed.filter(s => s !== action.payload)
+        }
+      }else{
+        return {
+          ...state
         }
       }
     }

@@ -11,6 +11,7 @@ import GameControls from './controls';
 import { 
   startRound, 
   revealAnswer, 
+  hideAnswer,
   setActiveTeam, 
   throwStrike, 
   showStrike, 
@@ -115,63 +116,59 @@ const HtmlRoundTitle = styled.div`
 
 class Scoreboard extends Component {
 
+  renderAnswer(answerObj, i, side){
+    let label = i + 1;
+    if(side === 'right'){
+      label = (i % 4) + 5;
+    }
+
+    return (
+      <Answer 
+        key={i} 
+        label={label}
+        revealed={answerObj.revealed}
+        title={answerObj.value} 
+        score={answerObj.points} 
+        onClick={ () => this.onAnswerClick(answerObj.idx, answerObj.revealed) }
+      />) 
+  }
+
   renderSurvey(surveyData){
     if(!surveyData){
       return null;
     }else{
       if(surveyData.answers.length <= 4){
+        //- single column survey
         return (
           <HtmlAnswerGrid>
             <HtmlAnswerColumn>
               { surveyData.answers.map((s, i) => (
-                <Answer 
-                  key={i} 
-                  label={i + 1}
-                  revealed={s.revealed}
-                  title={s.value} 
-                  score={s.points} 
-                  onClick={ () => this.onAnswerClick(s.idx) }
-                  />
+                this.renderAnswer(s, i, 'left')
               ))}
             </HtmlAnswerColumn>
           </HtmlAnswerGrid>
         );
       }else{
-        //- odd
+        //- double column survey
         return (
           <HtmlAnswerGrid>
             <HtmlAnswerColumnDouble position="1">
               { surveyData.answers.filter((s, i) => (
                 i < surveyData.answers.length / 2
               )).map((s, i) => (
-                <Answer 
-                  key={i} 
-                  label={i + 1}
-                  revealed={s.revealed}
-                  title={s.value} 
-                  score={s.points} 
-                  onClick={ () => this.onAnswerClick(s.idx) }
-                  />
+                this.renderAnswer(s, i, 'left')
               ))}
             </HtmlAnswerColumnDouble>
             <HtmlAnswerColumnDouble position={2}>
             { surveyData.answers.filter((s, i) => (
               i >= surveyData.answers.length / 2
               )).map((s, i) => (
-                <Answer 
-                  key={i} 
-                  label={i + 1 + Math.ceil(surveyData.answers.length / 2)}
-                  revealed={s.revealed}
-                  title={s.value} 
-                  score={s.points} 
-                  onClick={ () => this.onAnswerClick(s.idx) }
-                  />
+                this.renderAnswer(s, i, 'right')
               ))}
             </HtmlAnswerColumnDouble>
           </HtmlAnswerGrid>
         );
       }
-
     }
   }
 
@@ -179,9 +176,14 @@ class Scoreboard extends Component {
     this.props.startRound(id);
   }
 
-  onAnswerClick(answerIdx){
-    soundReveal.setVolume(.5).play();
-    this.props.revealAnswer(answerIdx);
+  onAnswerClick(answerIdx, revealed){
+    console.log('onAnswerCLick', answerIdx, revealed)
+    if(revealed){
+      this.props.hideAnswer(answerIdx);
+    }else{
+      soundReveal.setVolume(.5).play();
+      this.props.revealAnswer(answerIdx);
+    }
   }
 
   renderRoundBox(survey, questionShowing){
@@ -272,6 +274,7 @@ const mapDispatchToProps = dispatch =>
     { 
       startRound, 
       revealAnswer, 
+      hideAnswer, 
       setActiveTeam, 
       throwStrike, 
       showStrike, 

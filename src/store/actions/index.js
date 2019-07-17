@@ -64,6 +64,16 @@ export const revealAnswer = (payload) => {
   }
 }
 
+export const HIDE_ANSWER = 'HIDE_ANSWER';
+export const hideAnswer = (payload) => {
+  return dispatch => {
+    dispatch({
+      type: HIDE_ANSWER,
+      payload: payload
+    });
+  }
+}
+
 
 export const END_ROUND = 'END_ROUND';
 export const endRound = (payload) => {

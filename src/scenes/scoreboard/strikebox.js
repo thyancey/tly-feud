@@ -14,7 +14,7 @@ const HtmlStrikebox = styled.div`
 
   transition: border-color .2s ease-in-out;
   >div{
-    transition: color .2s ease-in-out;
+    transition: color .1s ease-in-out;
   }
   
   ${props => props.isActive === true ?

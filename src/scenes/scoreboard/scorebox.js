@@ -32,18 +32,27 @@ const HtmlScoreBlock = styled.div`
       padding-left:0;
     `
   }
-
-
 `
 
 const HtmlTop = styled.div`
   height:100%;
   color:white;
   position:relative;
+  transition: background-color .2s ease-out;
 
   ${props => props.active ?
-    css`background-color: ${themeGet('color', 'yellow')};` :
-    css`background-color: ${themeGet('color', 'greyDark')};`
+    css`
+      background-color: ${themeGet('color', 'yellow')};
+      &:hover{
+        background-color: ${themeGet('color', 'yellow')};
+      }
+    ` : 
+    css`
+      background-color: ${themeGet('color', 'greyDark')};
+      &:hover{
+        background-color: ${themeGet('color', 'greyLight')};
+      }
+    `
   }
 
   padding:.5rem;
