@@ -49,7 +49,7 @@ class GameController extends Component {
           this.props.toggleQuestion(true)
         }
         if(this.props.revealed.length === this.props.survey.answers.length){
-          this.props.endRound();
+          // this.props.endRound();
         }
       }
     }

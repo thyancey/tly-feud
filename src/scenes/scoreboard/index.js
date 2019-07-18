@@ -116,10 +116,10 @@ const HtmlRoundTitle = styled.div`
 
 class Scoreboard extends Component {
 
-  renderAnswer(answerObj, i, side){
+  renderAnswer(answerObj, i, numAnswers, side){
     let label = i + 1;
     if(side === 'right'){
-      label = (i % 4) + 5;
+      label = Math.ceil(numAnswers / 2) + i + 1;
     }
 
     return (
@@ -143,7 +143,7 @@ class Scoreboard extends Component {
           <HtmlAnswerGrid>
             <HtmlAnswerColumn>
               { surveyData.answers.map((s, i) => (
-                this.renderAnswer(s, i, 'left')
+                this.renderAnswer(s, i, surveyData.answers.length, 'left')
               ))}
             </HtmlAnswerColumn>
           </HtmlAnswerGrid>
@@ -156,14 +156,14 @@ class Scoreboard extends Component {
               { surveyData.answers.filter((s, i) => (
                 i < surveyData.answers.length / 2
               )).map((s, i) => (
-                this.renderAnswer(s, i, 'left')
+                this.renderAnswer(s, i, surveyData.answers.length, 'left')
               ))}
             </HtmlAnswerColumnDouble>
             <HtmlAnswerColumnDouble position={2}>
             { surveyData.answers.filter((s, i) => (
               i >= surveyData.answers.length / 2
               )).map((s, i) => (
-                this.renderAnswer(s, i, 'right')
+                this.renderAnswer(s, i, surveyData.answers.length, 'right')
               ))}
             </HtmlAnswerColumnDouble>
           </HtmlAnswerGrid>
