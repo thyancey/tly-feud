@@ -14,7 +14,7 @@ import {
   showTimeUp
 } from 'store/actions';
 
-const TIMER_DURATION = 15;
+const TIMER_DURATION = 10;
 const soundStrike = new UIfx({asset: SoundStrike});
 
 const HtmlTimerBlock = styled.span`

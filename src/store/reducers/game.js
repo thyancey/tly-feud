@@ -101,7 +101,8 @@ export default (state = initialState, action) => {
     case ADVANCE_ROUND:{
       return {
         ...state,
-        roundId: state.roundId + 1
+        roundId: state.roundId + 1,
+        questionShowing: false
       }
     }
 
