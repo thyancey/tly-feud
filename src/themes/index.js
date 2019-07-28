@@ -22,6 +22,7 @@ export default {
     blueLight: '#0090ff',
     blue: '#006dc7',
     blueDark: '#005499',
+    blueDarkest: '#001c33',
     tealLight: '#00dbc5',
     teal: '#4db2ff',
     tealDark: '#1a242d',

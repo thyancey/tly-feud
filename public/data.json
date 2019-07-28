@@ -7,6 +7,7 @@
   "surveys":[
     {
       "id": 1,
+      "type": "normal",
       "title": "Name a reason you might get rid of an old family heirloom.",
       "multiplier": 1,
       "answers":[
@@ -35,6 +36,45 @@
       ]
     },{
       "id": 2,
+      "type": "fastmoney",
+      "title": "FAST MONEY",
+      "multiplier": 1,
+      "answers":[
+        {
+          "value": "A hairdryer or something",
+          "points": 67
+        },{
+          "value": "5",
+          "points": 8
+        },{
+          "value": "Cheese",
+          "points": 53
+        },{
+          "value": "Old shoes",
+          "points": 0
+        },{
+          "value": "Coozie",
+          "points": 10
+        },{
+          "value": "2 Hair Dryer",
+          "points": 67
+        },{
+          "value": "2 5",
+          "points": 8
+        },{
+          "value": "2 Cheese",
+          "points": 53
+        },{
+          "value": "2 Old shoes",
+          "points": 0
+        },{
+          "value": "2 Coozie",
+          "points": 10
+        }
+      ]
+    },{
+      "id": 3,
+      "type": "normal",
       "title": "What are you most afraid of?",
       "multiplier": 2,
       "answers":[
@@ -59,7 +99,8 @@
         }
       ]
     },{
-      "id": 3,
+      "id": 4,
+      "type": "normal",
       "title": "Tell me something many people do just once a week.",
       "multiplier": 4,
       "answers":[
