@@ -116,21 +116,29 @@ const HtmlRoundTitle = styled.div`
 
 class Scoreboard extends Component {
 
-  renderAnswer(answerObj, i, numAnswers, side){
-    let label = i + 1;
-    if(side === 'right'){
-      label = Math.ceil(numAnswers / 2) + i + 1;
-    }
-
+  renderAnswer(answerObj, i){
     return (
       <Answer 
         key={i} 
-        label={label}
+        label={answerObj.idx + 1}
         revealed={answerObj.revealed}
         title={answerObj.value} 
         score={answerObj.points} 
         onClick={ () => this.onAnswerClick(answerObj.idx, answerObj.revealed) }
       />) 
+  }
+
+  renderAnswerColumn(answers, column){
+    if(column === 'left'){
+      return answers.filter((a,i) => i < 4).map((a,i) => (
+        this.renderAnswer(a, i)
+      ));
+    }else{
+      return answers.filter((a,i) => i > 3).map((a,i) => (
+        this.renderAnswer(a, i)
+      ));
+    }
+
   }
 
   renderSurvey(surveyData){
@@ -142,29 +150,20 @@ class Scoreboard extends Component {
         return (
           <HtmlAnswerGrid>
             <HtmlAnswerColumn>
-              { surveyData.answers.map((s, i) => (
-                this.renderAnswer(s, i, surveyData.answers.length, 'left')
-              ))}
+              { this.renderAnswerColumn(surveyData.answers, 'left') }
             </HtmlAnswerColumn>
           </HtmlAnswerGrid>
         );
       }else{
+
         //- double column survey
         return (
           <HtmlAnswerGrid>
             <HtmlAnswerColumnDouble position="1">
-              { surveyData.answers.filter((s, i) => (
-                i < surveyData.answers.length / 2
-              )).map((s, i) => (
-                this.renderAnswer(s, i, surveyData.answers.length, 'left')
-              ))}
+              { this.renderAnswerColumn(surveyData.answers, 'left') }
             </HtmlAnswerColumnDouble>
-            <HtmlAnswerColumnDouble position={2}>
-            { surveyData.answers.filter((s, i) => (
-              i >= surveyData.answers.length / 2
-              )).map((s, i) => (
-                this.renderAnswer(s, i, surveyData.answers.length, 'right')
-              ))}
+            <HtmlAnswerColumnDouble position="2">
+              { this.renderAnswerColumn(surveyData.answers, 'right') }
             </HtmlAnswerColumnDouble>
           </HtmlAnswerGrid>
         );
