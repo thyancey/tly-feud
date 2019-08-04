@@ -12,6 +12,7 @@ import { } from 'store/actions';
 
 const HtmlModalContainer = styled.div`
   position: absolute;
+  z-index:9999;
   left:1.5rem;
   top:1.5rem;
   right:1.5rem;

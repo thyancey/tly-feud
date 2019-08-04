@@ -76,6 +76,12 @@ const HtmlAnswerColumn = styled.ul`
 
   margin:0;
   padding:0;
+
+  margin-left:.5rem;
+  &:first-child{
+    margin-left:0;
+    padding-right:.5rem;
+  }
 `
 
 const HtmlAnswerColumnDouble = styled(HtmlAnswerColumn)`
@@ -105,9 +111,15 @@ const HtmlScoreBox = styled.li`
   margin-top: .5rem;
 
   >div{
-    height:11rem;
-    padding:3rem;
+    height:9.5rem;
+    padding:2.5rem 3rem;
     background-color: ${themeGet('color', 'blueDarkest')};
+    
+  
+  border-top: 2px solid ${themeGet('color', 'blue')};
+  border-left: 2px solid ${themeGet('color', 'blue')};
+  border-bottom: 3px solid ${themeGet('color', 'blueWhite')};
+  border-right: 3px solid ${themeGet('color', 'blueWhite')};
 
     >span{
       float:right;

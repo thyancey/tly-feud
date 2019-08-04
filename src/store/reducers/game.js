@@ -102,6 +102,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         roundId: state.roundId + 1,
+        activeTeam: null,
         questionShowing: false
       }
     }

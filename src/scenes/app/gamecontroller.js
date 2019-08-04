@@ -40,6 +40,11 @@ class GameController extends Component {
 
     if(prevProps.roundId !== this.props.roundId){
       this.nextRound()
+
+      //- for the hacky way im controlling the 'fast money round'
+      if(this.props.survey && this.props.survey.type === 'FASTMONEY'){
+        this.props.toggleQuestion(true)
+      }
     }
 
     if(this.props.survey){
@@ -49,7 +54,7 @@ class GameController extends Component {
           this.props.toggleQuestion(true)
         }
         if(this.props.revealed.length === this.props.survey.answers.length){
-          // this.props.endRound();
+          //- all answers have been revealed. But don't end the round automatically, no one likes that
         }
       }
     }
@@ -69,7 +74,8 @@ const makeMapStateToProps = () => {
     surveys: state.data.surveys,
     roundId: state.game.roundId,
     loaded: state.data.loaded,
-    revealed: state.game.revealed
+    revealed: state.game.revealed,
+    activeTeam: state.game.activeTeam
   });
 
   return mapStateToProps;

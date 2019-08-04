@@ -197,16 +197,16 @@ export const showTimeUp = (payload, delayed) => {
 
   if(!delayed){
     return dispatch => {
-      throwStrike(payload)(dispatch);
+      // throwStrike(payload)(dispatch);
     }
   }else{
     return dispatch => {
-      timeupTransition(throwStrike, payload, dispatch);
+      timeupTransition(payload, dispatch);
     }
   }
 }
 
-export const timeupTransition = (action, payload, dispatch) => {
+export const timeupTransition = (payload, dispatch) => {
   chainActions([
     {
       delay: 0,
@@ -214,11 +214,6 @@ export const timeupTransition = (action, payload, dispatch) => {
       payload: {
         label: 'timeupPopupOpen'
       }
-    },
-    {
-      delay: 0,
-      action: action,
-      payload: payload
     },
     {
       delay: 1000,

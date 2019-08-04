@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -16,6 +16,29 @@ import {
 
 const TIMER_DURATION = 10;
 const soundStrike = new UIfx({asset: SoundStrike});
+
+const HtmlFsTimerBlock = styled.span`
+  font-size:7rem;
+
+  &:hover{
+    cursor: pointer;
+  }
+
+  color: ${themeGet('color', 'greyLight')};
+  &:hover{
+    color: ${themeGet('color', 'blueLight')};
+  }
+
+  ${props => props.isActive === true &&
+    css`
+      color: ${themeGet('color', 'tealLight')};
+      
+      &:hover{
+        color: ${themeGet('color', 'red')};
+      }
+    `
+  }
+`
 
 const HtmlTimerBlock = styled.span`
   >*{
@@ -47,27 +70,38 @@ class TimerButton extends Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState){
+    if(prevProps.roundActive && !this.props.roundActive){
+      console.log('ROUND CHANGE')
+      this.killIntervalTimer();
+    }
+  }
+
+  componentWillUnmount(){
+    this.killIntervalTimer();
+  }
+
   throwTimeUp(){
     soundStrike.setVolume(.5).play();
     this.props.showTimeUp(null, true);
   }
 
-  startIntervalTimer(duration = 1){
+  startIntervalTimer(secondsDuration = 1){
+    const duration = secondsDuration * 1000;
     this.killIntervalTimer();
 
+    const timerEnd = new Date().getTime() + duration;
     this.setState({ 
-      timerEnd: new Date().getTime() + duration,
+      timerEnd: timerEnd,
       timerActive: true
     });
 
     this.intervalTimer = global.setInterval(() => {
-      let timeLeft = Math.ceil((this.state.timerEnd - new Date().getTime()) / 1000);
+      let timeLeft = Math.ceil((timerEnd - new Date().getTime()) / 1000);
 
       if(timeLeft === 0){
         this.killIntervalTimer();
         timeLeft = 0;
-        
-        console.log('TIMER COMPLETE!');
         this.throwTimeUp();
       }
 
@@ -85,7 +119,7 @@ class TimerButton extends Component {
       this.setState({
         timerActive: false,
         timerEnd: null
-      })
+      });
     }
   }
 
@@ -105,22 +139,34 @@ class TimerButton extends Component {
   }
 
   renderTimer(){
-    if(!this.state.timerActive || this.state.timeLeft === null){
-      return (
-        <HtmlTimerBlock>
-          <HtmlIcon src={IconTimer}/>
-          <span>{'Start timer'}</span>
-          <span>{this.getFancyTimeLeft(TIMER_DURATION)}</span>
-        </HtmlTimerBlock>
-      );
+    if(this.props.isFastMoney){
+      if(!this.state.timerActive || this.state.timeLeft === null){
+        return (
+          <HtmlFsTimerBlock isActive={false}>{this.getFancyTimeLeft(this.props.timeLimit || TIMER_DURATION)}</HtmlFsTimerBlock>
+        );
+      }else{
+        return (
+          <HtmlFsTimerBlock isActive={true}>{this.getFancyTimeLeft(this.state.timeLeft)}</HtmlFsTimerBlock>
+        );
+      }
     }else{
-      return (
-        <HtmlTimerBlock>
-          <HtmlIcon src={IconTimerOff}/>
-          <span>{'Stop timer'}</span>
-          <span>{this.getFancyTimeLeft(this.state.timeLeft)}</span>
-        </HtmlTimerBlock>
-      );
+      if(!this.state.timerActive || this.state.timeLeft === null){
+        return (
+          <HtmlTimerBlock>
+            <HtmlIcon src={IconTimer}/>
+            <span>{'Start timer'}</span>
+            <span>{this.getFancyTimeLeft(this.props.timeLimit || TIMER_DURATION)}</span>
+          </HtmlTimerBlock>
+        );
+      }else{
+        return (
+          <HtmlTimerBlock>
+            <HtmlIcon src={IconTimerOff}/>
+            <span>{'Stop timer'}</span>
+            <span>{this.getFancyTimeLeft(this.state.timeLeft)}</span>
+          </HtmlTimerBlock>
+        );
+      }
     }
   }
 
@@ -128,7 +174,7 @@ class TimerButton extends Component {
     if(this.state.timerActive){
       this.killIntervalTimer();
     }else{
-      this.startIntervalTimer(TIMER_DURATION * 1000);
+      this.startIntervalTimer(this.props.timeLimit || TIMER_DURATION);
     }
   }
 
@@ -141,6 +187,11 @@ class TimerButton extends Component {
   }
 }
 
+const mapStateToProps = ({ game }) => ({
+  roundActive: game.roundActive
+});
+
+
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     { 
@@ -150,6 +201,6 @@ const mapDispatchToProps = dispatch =>
   )
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(TimerButton)

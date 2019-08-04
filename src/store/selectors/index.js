@@ -63,3 +63,42 @@ export const createSelector_getWinningTeam = () => {
     }
   )
 }
+
+export const createSelector_getSurveyType = () => {
+  return createSelector(
+    [ 
+      state => state.data.surveys, 
+      state => state.game.roundId
+    ],
+    (surveys, roundId) => {
+      const foundSurvey = surveys && surveys.find(s => s.id === roundId);
+      if(foundSurvey){
+        return foundSurvey.type || 'NORMAL';
+      }
+
+      return 'NORMAL';
+    }
+  )
+}
+
+//- mostly dictates the fastmoney timer. Theoretically if the question is not showing, then it is player 2's turn
+export const createSelector_getFastMoneyRound = () => {
+  return createSelector(
+    [ 
+      state => state.data.surveys, 
+      state => state.game.roundId,
+      state => state.game.questionShowing
+    ],
+    (surveys, roundId, questionShowing) => {
+      const foundSurvey = surveys && surveys.find(s => s.id === roundId);
+      if(foundSurvey.type === 'FASTMONEY'){
+        if(questionShowing){
+          return 1;
+        }else{
+          return 2;
+        }
+      }
+      return null;
+    }
+  )
+}

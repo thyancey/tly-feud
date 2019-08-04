@@ -14,7 +14,6 @@ const HtmlAnswer = styled.div`
   top:.5rem;
   position: absolute;
   width: 100%;
-  ${'' /* background-color: ${themeGet('color', 'white')}; */}
 
   display:block;
   height:10.5rem;
@@ -23,6 +22,11 @@ const HtmlAnswer = styled.div`
 `
 
 const HtmlAnswerChild = styled.div`
+  cursor:pointer;
+  border-top: 2px solid ${themeGet('color', 'blue')};
+  border-left: 2px solid ${themeGet('color', 'blue')};
+  border-bottom: 3px solid ${themeGet('color', 'blueWhite')};
+  border-right: 3px solid ${themeGet('color', 'blueWhite')};
   display:inline-block;
   height:100%;
   vertical-align:middle;

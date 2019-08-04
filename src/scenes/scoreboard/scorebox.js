@@ -26,10 +26,12 @@ const HtmlScoreBlock = styled.div`
     css`
       border-radius: 2rem 0 0 2rem;
       padding-right:0;
+      margin-right:-.5rem;
     ` :
     css`
       border-radius: 0 2rem 2rem 0;
       padding-left:0;
+      margin-left:-.5rem;
     `
   }
 `

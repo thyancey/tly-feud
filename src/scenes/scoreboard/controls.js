@@ -17,15 +17,18 @@ import SoundTheme from 'assets/sounds/theme.mp3';
 
 import UIfx from 'uifx';
 import SoundKaChing from 'assets/sounds/ka-ching.mp3';
+import SoundFmBuzzer from 'assets/sounds/fastmoney-tryagain.wav';
 
 import { 
   awardPoints, 
   toggleQuestion, 
   advanceRound, 
+  showTimeUp,
   endRound
 } from 'store/actions';
-import { createSelector_getSurvey } from 'store/selectors';
+import { createSelector_getSurvey, createSelector_getSurveyType, createSelector_getFastMoneyRound } from 'store/selectors';
 const soundKaChing = new UIfx({asset: SoundKaChing});
+const soundFmBuzzer = new UIfx({asset: SoundFmBuzzer});
 
 const HtmlFooter = styled.div`
   grid-column: 1 / span 3;
@@ -42,10 +45,16 @@ const HtmlFooterChild = styled.div`
   width:50%;
 `
 
+const HtmlFmFooterChild = styled.div`
+  display:inline-block;
+  width:33%;
+`
+
 const HtmlButtonChild = styled.div`
   cursor:pointer;
   display:inline-block;
-  margin:0rem 2rem;
+  margin:0rem 1rem;
+  padding: 1rem 2rem;
 
   &:hover{
     span{
@@ -73,10 +82,7 @@ const HtmlText = styled.span`
 class Controls extends Component {
   constructor(){
     super();
-    this.timer = null;
     this.state = {
-      timerActive: false,
-      timerEnd: null,
       soundPlaying: false
     };
   }
@@ -87,58 +93,51 @@ class Controls extends Component {
     this.props.endRound(); 
   }
 
-  startTimer(duration = 1){
-    this.killTimer();
-    this.setState({ 
-      timerEnd: new Date().getTime() + duration,
-    });
-    this.timer = global.setTimeout(() => {
-      this.onTimer();
-    }, duration)
-  }
-
-  onTimer(){
-    console.log('ON TIMER');
-    this.setState({
-      timerActive: false,
-      timerEnd: null
-    })
-  }
-
-  killTimer(){
-    if(this.timer){
-      global.clearTimeout(this.timer);
-      this.timer = null;
-    }
-  }
-
-  renderTimer(){
-    if(!this.timer){
-      return null;
-    }else{
-      const timeLeft = parseInt((this.state.timerEnd - new Date().getTime()) / 1000);
-      return (
-        <p>{':' + timeLeft}</p>
-      );
-    }
-  }
-
   toggleMusic(musicState){
     this.setState({
       soundPlaying: musicState || false
     })
   }
 
-  render(){
-    return(
-      <HtmlFooter>
-        { this.state.soundPlaying && (
-          <ReactSound
-            url={SoundTheme}
-            playStatus={ReactSound.status.PLAYING}
-          />
-        )}
+  renderTimerButton(type){
+    if(type === 'FASTMONEY'){
+      return (
+        <HtmlFmFooterChild>
+          <TimerButton 
+            timeLimit={this.props.fastMoneyRound === 2 ? 25 : 20} 
+            isFastMoney={true} />
+        </HtmlFmFooterChild>
+      );
+    }else{
+      return(
+        <HtmlButtonChild>
+          <TimerButton 
+            timeLimit={10} 
+            isFastMoney={false} />
+        </HtmlButtonChild>
+      );
+    }
+  }
 
+  renderFirstColumn(surveyType){
+    if(surveyType === 'FASTMONEY'){
+      return(
+        <HtmlFmFooterChild>
+          { this.props.questionShowing ? (
+            <HtmlButtonChild onClick={() => this.props.toggleQuestion(false)}>
+              <HtmlIcon src={IconVisibilityOff}/>
+              <HtmlText>{'Hide scores'}</HtmlText>
+            </HtmlButtonChild>
+          ):(
+            <HtmlButtonChild onClick={() => this.props.toggleQuestion(true)}>
+              <HtmlIcon src={IconVisibility}/>
+              <HtmlText>{'Show scores'}</HtmlText>
+            </HtmlButtonChild>
+          ) }
+        </HtmlFmFooterChild>
+      );
+    }else{
+      return(
         <HtmlFooterChild>
           { this.props.questionShowing ? (
             <HtmlButtonChild onClick={() => this.props.toggleQuestion(false)}>
@@ -151,12 +150,35 @@ class Controls extends Component {
               <HtmlText>{'Show question'}</HtmlText>
             </HtmlButtonChild>
           ) }
-          { this.props.activeTeam && (
-            <HtmlButtonChild>
-              <TimerButton/>
+          { this.props.activeTeam && this.renderTimerButton() }
+        </HtmlFooterChild>
+      );
+    }
+  }
+
+  renderSecondColumn(surveyType){
+    if(surveyType === 'FASTMONEY'){
+      return (
+        <HtmlFmFooterChild>
+          <HtmlButtonChild onClick={() => { soundFmBuzzer.play() }}>
+            <HtmlIcon src={IconMusicOn}/>
+            <HtmlText>{'BUZZ'}</HtmlText>
+          </HtmlButtonChild>
+          { this.state.soundPlaying ? (
+            <HtmlButtonChild onClick={() => this.toggleMusic(false)}>
+              <HtmlIcon src={IconMusicOff}/>
+              <HtmlText>{'Turn music off'}</HtmlText>
+            </HtmlButtonChild>
+          ):(
+            <HtmlButtonChild onClick={() => this.toggleMusic(true)}>
+              <HtmlIcon src={IconMusicOn}/>
+              <HtmlText>{'Turn music on'}</HtmlText>
             </HtmlButtonChild>
           ) }
-        </HtmlFooterChild>
+        </HtmlFmFooterChild>
+      );
+    }else{
+      return (
         <HtmlFooterChild>
           { this.props.activeTeam && this.props.roundActive && (
             <HtmlButtonChild onClick={() => this.endRound()}>
@@ -180,6 +202,24 @@ class Controls extends Component {
             </HtmlButtonChild>
           ) }
         </HtmlFooterChild>
+      );
+    }
+  }
+
+
+  render(){
+    return(
+      <HtmlFooter>
+        { this.state.soundPlaying && (
+          <ReactSound
+            url={SoundTheme}
+            playStatus={ReactSound.status.PLAYING}
+          />
+        )}
+
+        { this.renderFirstColumn(this.props.surveyType) }
+        { this.props.surveyType === 'FASTMONEY' && this.renderTimerButton(this.props.surveyType) }
+        { this.renderSecondColumn(this.props.surveyType) }
       </HtmlFooter>
     );
   }
@@ -187,8 +227,12 @@ class Controls extends Component {
 
 const makeMapStateToProps = () => {
   const getSurvey = createSelector_getSurvey();
+  const getSurveyType = createSelector_getSurveyType();
+  const getFastMoneyRound = createSelector_getFastMoneyRound();
   const mapStateToProps = (state, props) => ({
     survey: getSurvey(state, props),
+    surveyType: getSurveyType(state, props),
+    fastMoneyRound: getFastMoneyRound(state, props),
     activeTeam: state.game.activeTeam,
     roundActive: state.game.roundActive,
     questionShowing: state.game.questionShowing
@@ -203,7 +247,8 @@ const mapDispatchToProps = dispatch =>
       awardPoints, 
       toggleQuestion, 
       advanceRound, 
-      endRound
+      endRound,
+      showTimeUp
     },
     dispatch
   )
