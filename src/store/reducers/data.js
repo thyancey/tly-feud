@@ -21,20 +21,23 @@ const SHEET = {
   'SURVEY': 0,
   'ANSWER': 1,
   'POINTS': 2,
-  'MULTIPLIER': 3
+  'MULTIPLIER': 3,
+  'TYPE': 4
 }
 
 const getSurveyObj = (idx, start, end, csvData) => {
+  const type = csvData[start][SHEET.TYPE] || 'NORMAL';
   const resp = {
     id: idx + 1,
     title: csvData[start][SHEET.SURVEY],
     multiplier: +csvData[start][SHEET.MULTIPLIER],
+    type: type,
     answers:[]
   };
 
   for(let i = start + 1; i < end; i++){
     const answer = csvData[i][SHEET.ANSWER];
-    if(answer === ''){
+    if(answer === '' && type !== 'FASTMONEY'){
       break;
     }else{
       resp.answers.push({
@@ -47,19 +50,32 @@ const getSurveyObj = (idx, start, end, csvData) => {
   return resp;
 }
 
+const getSurveyType = (rowIdx, csvData) => ( csvData[rowIdx][SHEET.TYPE] || 'NORMAL' );
+
 const parseSheetCsv = (csvData) => {
-  const idxs = [];
+  const surveyIdxs = [];
+  // const type = csvData[start][SHEET.TYPE];
+
   csvData.map((row, ri) => { 
+    //- if not the header and the first cell has something,
+    //- then its a survey title
     if(ri !== 0 && row[0] !== ''){
-      idxs.push(ri);
+      surveyIdxs.push(ri);
     }
   })
 
   const surveys = [];
-  for(let i = 0; i < idxs.length; i++){
-    const start = idxs[i];
-    let end = start + 9;
-    
+  for(let i = 0; i < surveyIdxs.length; i++){
+    const type = getSurveyType(surveyIdxs[i], csvData);
+
+    const start = surveyIdxs[i];
+
+    let end;
+    if(type === 'FASTMONEY'){
+      end = start + 11;
+    }else{
+      end = start + 9;
+    }
     if (end > csvData.length) end = csvData.length;
 
     surveys.push(getSurveyObj(i, start, end, csvData))
@@ -90,7 +106,6 @@ export default (state = initialState, action) => {
 
     case SET_SHEET_DATA:{
       const parsedData = action.payload;
-      console.log('parsedData:', parsedData)
       if(!parsedData){
         return {
           ...state

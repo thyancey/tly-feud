@@ -10,10 +10,10 @@ import { createSelector_getSurvey } from 'store/selectors';
 class Scoreboard extends Component {
   render(){
     if(this.props.survey.type){
-      if(this.props.survey.type === 'normal'){
-        return <NormalBoard />
-      }else{
+      if(this.props.survey.type === 'FASTMONEY'){
         return <FastMoneyBoard />
+      }else{
+        return <NormalBoard />
       }
     }else{
       return null;

@@ -7,7 +7,7 @@
   "surveys":[
     {
       "id": 1,
-      "type": "normal",
+      "type": "NORMAL",
       "title": "Name a reason you might get rid of an old family heirloom.",
       "multiplier": 1,
       "answers":[
@@ -36,7 +36,7 @@
       ]
     },{
       "id": 2,
-      "type": "fastmoney",
+      "type": "FASTMONEY",
       "title": "FAST MONEY",
       "multiplier": 1,
       "answers":[
@@ -74,7 +74,7 @@
       ]
     },{
       "id": 3,
-      "type": "normal",
+      "type": "NORMAL",
       "title": "What are you most afraid of?",
       "multiplier": 2,
       "answers":[
@@ -100,7 +100,7 @@
       ]
     },{
       "id": 4,
-      "type": "normal",
+      "type": "NORMAL",
       "title": "Tell me something many people do just once a week.",
       "multiplier": 4,
       "answers":[
