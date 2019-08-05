@@ -79,6 +79,9 @@ const HtmlAnswerCover = styled.div`
   z-index:1;
 
   background-color: ${themeGet('color', 'blueDarkest')};
+  &:hover{
+    box-shadow: 2px 2px 2px ${themeGet('color', 'white')};
+  }
 
   transition: left .2s ease-in-out;
 
@@ -89,6 +92,16 @@ const HtmlAnswerCover = styled.div`
     ` :
     css`
       left:0%
+    `
+  }
+
+  
+  ${props => props.isPopulated === true ?
+    css`
+    ` :
+    css`
+      cursor:default;
+      background-color: ${themeGet('color', 'blueLight')};
     `
   }
 `
@@ -103,11 +116,11 @@ class FastMoneyAnswer extends Component {
       <HtmlContainer>
         <HtmlAnswer>
           <HtmlAnswerLeft wrapText={this.props.title.length > 17} onClick={this.props.onClick}>
-            <HtmlAnswerCover isShowing={this.props.revealed} />
+            <HtmlAnswerCover isShowing={this.props.revealed} isPopulated={this.props.populated}/>
             <span>{this.props.title}</span>
           </HtmlAnswerLeft>
           <HtmlAnswerRight onClick={this.props.onScoreClick}>
-            <HtmlAnswerCover isShowing={this.props.scoreRevealed} />
+            <HtmlAnswerCover isShowing={this.props.scoreRevealed} isPopulated={this.props.populated}/>
             <span>{this.props.score}</span>
           </HtmlAnswerRight>
         </HtmlAnswer>

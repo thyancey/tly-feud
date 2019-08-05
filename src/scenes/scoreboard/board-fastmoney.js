@@ -151,11 +151,12 @@ class FastMoneyBoard extends Component {
         key={i} 
         label={answerObj.idx + 1}
         revealed={allowedToShow && answerObj.revealed}
+        populated={answerObj.populated}
         scoreRevealed={allowedToShow && this.state.revealedScores.indexOf(answerObj.idx) > -1}
         title={answerObj.value} 
         score={answerObj.points} 
-        onScoreClick = { () => this.onScoreClick(answerObj.idx, answerObj.revealed)}
-        onClick={ () => this.onAnswerClick(answerObj.idx, answerObj.revealed) }
+        onScoreClick = { () => this.onScoreClick(answerObj.idx, answerObj.revealed, answerObj.populated)}
+        onClick={ () => this.onAnswerClick(answerObj.idx, answerObj.revealed, answerObj.populated) }
       />) 
   }
 
@@ -208,12 +209,14 @@ class FastMoneyBoard extends Component {
     this.props.startRound(id);
   }
 
-  onAnswerClick(answerIdx, revealed){
-    if(revealed){
-      this.props.hideAnswer(answerIdx);
-    }else{
-      soundFastMoneyAnswer.setVolume(.5).play();
-      this.props.revealAnswer(answerIdx);
+  onAnswerClick(answerIdx, revealed, populated){
+    if(populated){
+      if(revealed){
+        this.props.hideAnswer(answerIdx);
+      }else{
+        soundFastMoneyAnswer.setVolume(.5).play();
+        this.props.revealAnswer(answerIdx);
+      }
     }
   }
 
@@ -235,13 +238,15 @@ class FastMoneyBoard extends Component {
     })
   }
   
-  onScoreClick(answerIdx, answerRevealed){
-    if(this.state.revealedScores.indexOf(answerIdx) === -1){
-      if(answerRevealed){
-        this.showAnswerScore(answerIdx, this.state.revealedScores);
+  onScoreClick(answerIdx, answerRevealed, populated){
+    if(populated){
+      if(this.state.revealedScores.indexOf(answerIdx) === -1){
+        if(answerRevealed){
+          this.showAnswerScore(answerIdx, this.state.revealedScores);
+        }
+      }else{
+        this.hideAnswerScore(answerIdx, this.state.revealedScores);
       }
-    }else{
-      this.hideAnswerScore(answerIdx, this.state.revealedScores);
     }
   }
 

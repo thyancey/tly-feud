@@ -37,12 +37,15 @@ const getSurveyObj = (idx, start, end, csvData) => {
 
   for(let i = start + 1; i < end; i++){
     const answer = csvData[i][SHEET.ANSWER];
+    const populated = csvData[i][SHEET.POINTS] !== '';
+
     if(answer === '' && type !== 'FASTMONEY'){
       break;
     }else{
       resp.answers.push({
         value: answer,
-        points: +csvData[i][SHEET.POINTS]
+        points: +csvData[i][SHEET.POINTS],
+        populated: populated
       });
     }
   }
@@ -76,6 +79,7 @@ const parseSheetCsv = (csvData) => {
     }else{
       end = start + 9;
     }
+
     if (end > csvData.length) end = csvData.length;
 
     surveys.push(getSurveyObj(i, start, end, csvData))
