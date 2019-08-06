@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { themeGet } from 'themes/';
 import Answer from './answer-fastmoney';
-import Scorebox from './scorebox';
 import GameControls from './controls';
 
 import { 
   startRound, 
   revealAnswer, 
   hideAnswer,
-  setActiveTeam
+  setActiveTeam,
+  winGame
 } from 'store/actions';
 import { createSelector_getSurvey } from 'store/selectors';
 
@@ -20,13 +20,10 @@ import UIfx from 'uifx';
 import SoundFastMoneyAnswer from 'assets/sounds/fastmoney-answer.wav';
 import SoundFastMoneyScore from 'assets/sounds/fastmoney-score.wav';
 import SoundFastMoney0 from 'assets/sounds/fastmoney-0.wav';
-import SoundFastMoneyStrike from 'assets/sounds/fastmoney-tryagain.wav';
-
+ 
 const soundFastMoneyAnswer = new UIfx({asset: SoundFastMoneyAnswer});
 const soundFastMoneyScore = new UIfx({asset: SoundFastMoneyScore});
 const soundFastMoney0 = new UIfx({asset: SoundFastMoney0});
-const soundFastMoneyStrike = new UIfx({asset: SoundFastMoneyStrike});
-
 
 const HtmlContainer = styled.div`
   position:absolute;
@@ -46,6 +43,13 @@ const HtmlContainer = styled.div`
   background-color:  ${themeGet('color', 'tealDark')};
   border: 1rem solid ${themeGet('color', 'tealLight')};
   color: ${themeGet('color', 'blue')};
+
+  ${props => props.isFlashing === true && 
+    css`
+      background-color:  ${themeGet('color', 'tealLight')};
+    `
+  }
+
 `
 
 const HtmlAnswerGrid = styled.div`
@@ -115,11 +119,10 @@ const HtmlScoreBox = styled.li`
     padding:2.5rem 3rem;
     background-color: ${themeGet('color', 'blueDarkest')};
     
-  
-  border-top: 2px solid ${themeGet('color', 'blue')};
-  border-left: 2px solid ${themeGet('color', 'blue')};
-  border-bottom: 3px solid ${themeGet('color', 'blueWhite')};
-  border-right: 3px solid ${themeGet('color', 'blueWhite')};
+    border-top: 2px solid ${themeGet('color', 'blue')};
+    border-left: 2px solid ${themeGet('color', 'blue')};
+    border-bottom: 3px solid ${themeGet('color', 'blueWhite')};
+    border-right: 3px solid ${themeGet('color', 'blueWhite')};
 
     >span{
       float:right;
@@ -138,7 +141,9 @@ class FastMoneyBoard extends Component {
     super();
 
     this.state = {
-      revealedScores: []
+      revealedScores: [],
+      fastMoneyScore: 0,
+      isFlashing: false
     }
   }
 
@@ -170,16 +175,6 @@ class FastMoneyBoard extends Component {
         this.renderAnswer(a, i)
       ));
     }
-
-  }
-
-  getFastScore(){
-    let score = 0;
-    this.state.revealedScores.map(sIdx => {
-      score += this.props.survey.answers[sIdx].points;
-    })
-
-    return score;
   }
 
   renderSurvey(surveyData){
@@ -196,7 +191,7 @@ class FastMoneyBoard extends Component {
             <HtmlScoreBox>
               <div>
                 <span>{'Total'}</span>
-                <span>{this.getFastScore()}</span>
+                <span>{this.state.fastMoneyScore}</span>
               </div>
             </HtmlScoreBox>
           </HtmlAnswerColumnDouble>
@@ -227,15 +222,45 @@ class FastMoneyBoard extends Component {
     }else{
       soundFastMoney0.setVolume(.5).play();
     }
-    this.setState({
-      revealedScores: revealedScores.concat(answerIdx)
-    })
+
+    const newRevealedScores = revealedScores.concat(answerIdx);
+    //- dont update the score after you already won dummy
+    if(!this.props.gameWon){
+      let score = 0;
+      newRevealedScores.map(sIdx => {
+        score += this.props.survey.answers[sIdx].points;
+      });
+    
+      this.setState({
+        fastMoneyScore: score,
+        revealedScores: newRevealedScores
+      })
+    }else{
+      this.setState({
+        revealedScores: newRevealedScores
+      })
+    }
   }
 
   hideAnswerScore(answerIdx, revealedScores){
-    this.setState({
-      revealedScores: revealedScores.filter(s => s !== answerIdx)
-    })
+    const newRevealedScores = revealedScores.filter(s => s !== answerIdx)
+
+    //- dont update the score after you already won dummy
+    if(!this.props.gameWon){
+      let score = 0;
+      newRevealedScores.map(sIdx => {
+        score += this.props.survey.answers[sIdx].points;
+      });
+  
+      this.setState({
+        fastMoneyScore: score,
+        revealedScores: newRevealedScores
+      })
+    }else{
+      this.setState({
+        revealedScores: newRevealedScores
+      });
+    }
   }
   
   onScoreClick(answerIdx, answerRevealed, populated){
@@ -247,6 +272,39 @@ class FastMoneyBoard extends Component {
       }else{
         this.hideAnswerScore(answerIdx, this.state.revealedScores);
       }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.fastMoneyScore !== this.state.fastMoneyScore && this.state.fastMoneyScore >= 200){
+      this.props.winGame();
+    }
+
+    if(prevProps.gameWon !== this.props.gameWon && this.props.gameWon){
+      this.startFlashInterval();
+      global.setTimeout(() => {
+        this.killFlashInterval();
+        this.setState({
+          isFlashing: false
+        });
+      }, 5500)
+    }
+  }
+
+  startFlashInterval(){
+    this.killFlashInterval();
+
+    this.flashInterval = global.setInterval(() => {
+      this.setState({
+        isFlashing: !this.state.isFlashing
+      });
+    }, 200);
+  }
+
+  killFlashInterval(){
+    if(this.flashInterval){
+      global.clearInterval(this.flashInterval);
+      this.flashInterval = null;
     }
   }
 
@@ -271,7 +329,7 @@ class FastMoneyBoard extends Component {
 
   render(){
     return(
-      <HtmlContainer id="scoreboard" >
+      <HtmlContainer id="scoreboard" isFlashing={this.state.isFlashing}>
         { this.renderHeader(this.props.survey, this.props.questionShowing) }
         { this.renderSurvey(this.props.survey) }
         <GameControls />
@@ -289,7 +347,8 @@ const makeMapStateToProps = () => {
     roundId: state.game.roundId,
     roundActive: state.game.roundActive,
     activeTeam: state.game.activeTeam,
-    questionShowing: state.game.questionShowing
+    questionShowing: state.game.questionShowing,
+    gameWon: state.game.gameWon
   });
 
   return mapStateToProps;
@@ -301,7 +360,8 @@ const mapDispatchToProps = dispatch =>
       startRound, 
       revealAnswer, 
       hideAnswer, 
-      setActiveTeam
+      setActiveTeam,
+      winGame
     },
     dispatch
   )

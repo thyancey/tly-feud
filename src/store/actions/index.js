@@ -168,6 +168,16 @@ export const showStrike = (action, payload, delayed) => {
   }
 }
 
+export const WIN_GAME = 'WIN_GAME';
+export const winGame = (payload) => {
+  return dispatch => {
+    dispatch({
+      type: WIN_GAME,
+      payload: payload
+    });
+  }
+}
+
 export const strikeTransition = (action, payload, dispatch) => {
   chainActions([
     {
@@ -193,15 +203,14 @@ export const strikeTransition = (action, payload, dispatch) => {
 }
 
 export const SHOW_TIMEUP = 'SHOW_TIMEUP';
-export const showTimeUp = (payload, delayed) => {
-
-  if(!delayed){
+export const showTimeUp = (shouldThrowStrike) => {
+  if(shouldThrowStrike){
     return dispatch => {
-      // throwStrike(payload)(dispatch);
+      timeupTransitionWithStrike(throwStrike, null, dispatch);
     }
   }else{
     return dispatch => {
-      timeupTransition(payload, dispatch);
+      timeupTransition(null, dispatch);
     }
   }
 }
@@ -225,3 +234,26 @@ export const timeupTransition = (payload, dispatch) => {
   ])(dispatch);
 }
 
+export const timeupTransitionWithStrike = (action, payload, dispatch) => {
+  chainActions([
+    {
+      delay: 0,
+      action: setTransition,
+      payload: {
+        label: 'timeupPopupOpen'
+      }
+    },
+    {
+      delay: 0,
+      action: action,
+      payload: payload
+    },
+    {
+      delay: 1000,
+      action: setTransition,
+      payload: {
+        label: ''
+      }
+    }
+  ])(dispatch);
+}

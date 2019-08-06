@@ -23,7 +23,6 @@ import {
   awardPoints, 
   toggleQuestion, 
   advanceRound, 
-  showTimeUp,
   endRound
 } from 'store/actions';
 import { createSelector_getSurvey, createSelector_getSurveyType, createSelector_getFastMoneyRound } from 'store/selectors';
@@ -97,6 +96,14 @@ class Controls extends Component {
     this.setState({
       soundPlaying: musicState || false
     })
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.gameWon !== this.props.gameWon && this.props.gameWon){
+      global.setTimeout(() => {
+        this.toggleMusic(true);
+      }, 4500)
+    }
   }
 
   renderTimerButton(type){
@@ -213,6 +220,7 @@ class Controls extends Component {
         { this.state.soundPlaying && (
           <ReactSound
             url={SoundTheme}
+            loop={true}
             playStatus={ReactSound.status.PLAYING}
           />
         )}
@@ -235,7 +243,8 @@ const makeMapStateToProps = () => {
     fastMoneyRound: getFastMoneyRound(state, props),
     activeTeam: state.game.activeTeam,
     roundActive: state.game.roundActive,
-    questionShowing: state.game.questionShowing
+    questionShowing: state.game.questionShowing,
+    gameWon: state.game.gameWon
   });
 
   return mapStateToProps;
@@ -247,8 +256,7 @@ const mapDispatchToProps = dispatch =>
       awardPoints, 
       toggleQuestion, 
       advanceRound, 
-      endRound,
-      showTimeUp
+      endRound
     },
     dispatch
   )

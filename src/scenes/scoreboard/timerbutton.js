@@ -83,7 +83,11 @@ class TimerButton extends Component {
 
   throwTimeUp(){
     soundStrike.setVolume(.5).play();
-    this.props.showTimeUp(null, true);
+    if(this.props.isFastMoney){
+      this.props.showTimeUp(false);
+    }else{
+      this.props.showTimeUp(true);
+    }
   }
 
   startIntervalTimer(secondsDuration = 1){

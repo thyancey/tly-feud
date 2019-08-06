@@ -10,7 +10,8 @@ import {
   THROW_STRIKE,
   REVERT_STRIKE,
   AWARD_POINTS,
-  SET_ACTIVE_TEAM
+  SET_ACTIVE_TEAM,
+  WIN_GAME
 } from '../actions';
 
 import {
@@ -24,6 +25,7 @@ const initialState = {
   roundActive: false,
   revealed: [],
   questionShowing: false,
+  gameWon: false,
   teams: {
     left: {
       name: "",
@@ -181,6 +183,13 @@ export default (state = initialState, action) => {
       }
     }
 
+    case WIN_GAME:{
+      return {
+        ...state,
+        gameWon: true
+      }
+    }
+
     case SET_TRANSITION:{
       console.log('transitionLabel:', action.payload.label);
       return {
@@ -188,6 +197,7 @@ export default (state = initialState, action) => {
         transitionLabel: action.payload.label
       }
     }
+
 
     default:
       return state

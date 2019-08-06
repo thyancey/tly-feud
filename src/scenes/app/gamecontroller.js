@@ -7,9 +7,14 @@ import {
   endRound, 
   awardPoints, 
   advanceRound,
-  toggleQuestion
+  toggleQuestion,
+  winGame
 } from 'store/actions/index.js';
 import { createSelector_getSurvey } from 'store/selectors';
+
+import UIfx from 'uifx';
+import SoundGameWin from 'assets/sounds/winmusic.wav';
+const soundGameWin = new UIfx({asset: SoundGameWin});
 
 
 class GameController extends Component {
@@ -28,6 +33,7 @@ class GameController extends Component {
     if(this.props.roundId <= this.props.surveys.length){
       this.props.startRound(this.props.roundId);
     }else{
+      this.props.winGame();
       console.log('GAME IS OVER');
     }
   }
@@ -58,6 +64,10 @@ class GameController extends Component {
         }
       }
     }
+
+    if(prevProps.gameWon !== this.props.gameWon && this.props.gameWon){
+      soundGameWin.setVolume(1).play();
+    }
   }
   
   render(){
@@ -75,7 +85,8 @@ const makeMapStateToProps = () => {
     roundId: state.game.roundId,
     loaded: state.data.loaded,
     revealed: state.game.revealed,
-    activeTeam: state.game.activeTeam
+    activeTeam: state.game.activeTeam,
+    gameWon: state.game.gameWon
   });
 
   return mapStateToProps;
@@ -88,7 +99,8 @@ const mapDispatchToProps = dispatch =>
       startRound, 
       awardPoints, 
       advanceRound,
-      toggleQuestion 
+      toggleQuestion,
+      winGame
     },
     dispatch
   )
