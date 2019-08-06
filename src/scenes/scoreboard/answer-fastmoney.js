@@ -49,7 +49,7 @@ const HtmlAnswerChild = styled.div`
 
 const HtmlAnswerLeft = styled(HtmlAnswerChild)`
   padding:0rem 1.5rem;
-  width:calc(100% - 120px);
+  width:calc(100% - 122px);
   text-align:left;
   font-size:7rem;
 `
