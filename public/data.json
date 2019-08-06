@@ -36,44 +36,6 @@
       ]
     },{
       "id": 2,
-      "type": "FASTMONEY",
-      "title": "FAST MONEY",
-      "multiplier": 1,
-      "answers":[
-        {
-          "value": "A hairdryer or something",
-          "points": 67
-        },{
-          "value": "5",
-          "points": 8
-        },{
-          "value": "",
-          "points": 53
-        },{
-          "value": "Old shoes",
-          "points": 0
-        },{
-          "value": "Coozie",
-          "points": 10
-        },{
-          "value": "2 Hair Dryer",
-          "points": 67
-        },{
-          "value": "2 5",
-          "points": 8
-        },{
-          "value": "2 Cheese",
-          "points": 53
-        },{
-          "value": "2 Old shoes",
-          "points": 0
-        },{
-          "value": "2 Coozie",
-          "points": 10
-        }
-      ]
-    },{
-      "id": 3,
       "type": "NORMAL",
       "title": "What are you most afraid of?",
       "multiplier": 2,
@@ -99,7 +61,7 @@
         }
       ]
     },{
-      "id": 4,
+      "id": 3,
       "type": "NORMAL",
       "title": "Tell me something many people do just once a week.",
       "multiplier": 4,
@@ -116,6 +78,55 @@
         },{
           "value": "Clean House",
           "points": 9
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "FASTMONEY",
+      "title": "FAST MONEY",
+      "multiplier": 1,
+      "answers":[
+        {
+          "value": "This answer is too long",
+          "points": 67,
+          "populated": true
+        },{
+          "value": "5",
+          "points": 8,
+          "populated": true
+        },{
+          "value": "",
+          "points": 53,
+          "populated": true
+        },{
+          "value": "Old shoes",
+          "points": 0,
+          "populated": true
+        },{
+          "value": "Coozie",
+          "points": 10,
+          "populated": true
+        },{
+          "value": "2 Hair Dryer",
+          "points": 67,
+          "populated": true
+        },{
+          "value": "2 5",
+          "points": 8,
+          "populated": true
+        },{
+          "value": "2 Cheese",
+          "points": 53,
+          "populated": true
+        },{
+          "value": "2 Old shoes",
+          "points": 0,
+          "populated": true
+        },{
+          "value": "2 Coozie",
+          "points": 10,
+          "populated": true
         }
       ]
     }

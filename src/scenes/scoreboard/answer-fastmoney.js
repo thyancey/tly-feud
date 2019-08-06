@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
+import ReactFitText from 'react-fittext';
 
 import { themeGet } from 'themes/';
 
@@ -47,19 +48,10 @@ const HtmlAnswerChild = styled.div`
 `
 
 const HtmlAnswerLeft = styled(HtmlAnswerChild)`
-  padding:0rem 3rem;
+  padding:0rem 1.5rem;
   width:calc(100% - 120px);
   text-align:left;
-
-  ${props => props.wrapText === true ?
-    css`
-      font-size:4rem;
-      line-height:4.5rem;
-    ` :
-    css`
-      font-size:7rem;
-    `
-  }
+  font-size:7rem;
 `
 
 const HtmlAnswerRight = styled(HtmlAnswerChild)`
@@ -115,9 +107,11 @@ class FastMoneyAnswer extends Component {
     return(
       <HtmlContainer>
         <HtmlAnswer>
-          <HtmlAnswerLeft wrapText={this.props.title.length > 17} onClick={this.props.onClick}>
+          <HtmlAnswerLeft onClick={this.props.onClick} >
             <HtmlAnswerCover isShowing={this.props.revealed} isPopulated={this.props.populated}/>
-            <span>{this.props.title}</span>
+            <ReactFitText>
+              <span>{this.props.title}</span>
+            </ReactFitText>
           </HtmlAnswerLeft>
           <HtmlAnswerRight onClick={this.props.onScoreClick}>
             <HtmlAnswerCover isShowing={this.props.scoreRevealed} isPopulated={this.props.populated}/>

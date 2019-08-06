@@ -110,6 +110,7 @@ const HtmlRoundTitle = styled.div`
       position:absolute;
       top:50%;
       transform:translateY(-50%);
+      padding-right:2rem;
     }
   }
 `

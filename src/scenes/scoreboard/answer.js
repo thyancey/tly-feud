@@ -47,7 +47,7 @@ const HtmlAnswerLeft = styled(HtmlAnswerChild)`
   box-shadow: inset 3px 3px 8px 0 rgba(0, 84, 153, 0.7);
   background-image: linear-gradient(to top, #006dc7, #005499);
 
-  font-size:4rem;
+  font-size:5rem;
   line-height:4.5rem;
 `
 

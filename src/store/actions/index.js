@@ -20,6 +20,19 @@ export const setSheetData = (data) => {
   }
 }
 
+export const SET_GOOGLE_SHEET_DATA = 'SET_GOOGLE_SHEET_DATA';
+export const setGoogleSheetData = (sheetId, tabId) => {
+  return dispatch => {
+    dispatch({
+      type: SET_GOOGLE_SHEET_DATA,
+      payload: {
+        sheetId: sheetId,
+        tabId: tabId
+      }
+    });
+  }
+}
+
 export const SET_TEAMS = 'SET_TEAMS';
 export const setTeams = (teamLeft, teamRight) => {
   return dispatch => {

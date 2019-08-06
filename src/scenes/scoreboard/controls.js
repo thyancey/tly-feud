@@ -23,7 +23,8 @@ import {
   awardPoints, 
   toggleQuestion, 
   advanceRound, 
-  endRound
+  endRound,
+  setGoogleSheetData
 } from 'store/actions';
 import { createSelector_getSurvey, createSelector_getSurveyType, createSelector_getFastMoneyRound } from 'store/selectors';
 const soundKaChing = new UIfx({asset: SoundKaChing});
@@ -182,6 +183,9 @@ class Controls extends Component {
               <HtmlText>{'Turn music on'}</HtmlText>
             </HtmlButtonChild>
           ) }
+          <HtmlButtonChild onClick={(e) => this.showImportPrompt(e)}>
+            <HtmlText>{'+'}</HtmlText>
+          </HtmlButtonChild>
         </HtmlFmFooterChild>
       );
     }else{
@@ -213,6 +217,14 @@ class Controls extends Component {
     }
   }
 
+  showImportPrompt(e){
+    const tabId = global.window.prompt('Enter tabId');
+    if(tabId){
+      this.props.setGoogleSheetData(null, tabId);
+    }else{
+      console.warn('no tab id given');
+    }
+  }
 
   render(){
     return(
@@ -256,7 +268,8 @@ const mapDispatchToProps = dispatch =>
       awardPoints, 
       toggleQuestion, 
       advanceRound, 
-      endRound
+      endRound,
+      setGoogleSheetData
     },
     dispatch
   )

@@ -1,6 +1,7 @@
 import { 
   SET_DATA,
-  SET_SHEET_DATA
+  SET_SHEET_DATA,
+  SET_GOOGLE_SHEET_DATA
 } from '../actions';
 import { SET_TRANSITION } from '../actions/transition';
 
@@ -14,15 +15,17 @@ const initialState = {
     left:'',
     right:''
   },
+  sheetId: null,
+  tabId: null,
   surveys: []
 }
 
 const SHEET = {
   'SURVEY': 0,
-  'ANSWER': 1,
-  'POINTS': 2,
-  'MULTIPLIER': 3,
-  'TYPE': 4
+  'ANSWER': 2,
+  'POINTS': 3,
+  'MULTIPLIER': 4,
+  'TYPE': 5
 }
 
 const getSurveyObj = (idx, start, end, csvData) => {
@@ -119,6 +122,22 @@ export default (state = initialState, action) => {
         return {
           ...state,
           surveys: surveyJson
+        }
+      }
+    }
+
+    case SET_GOOGLE_SHEET_DATA:{
+      const sheetId = action.payload.sheetId || state.sheetId;
+      const tabId = action.payload.tabId || state.tabId;
+      if(!tabId){
+        return {
+          ...state
+        }
+      }else{
+        return {
+          ...state,
+          tabId: tabId,
+          sheetId: sheetId
         }
       }
     }
