@@ -13,7 +13,7 @@ import {
 import { createSelector_getSurvey } from 'store/selectors';
 
 import UIfx from 'uifx';
-import SoundGameWin from 'assets/sounds/winmusic.wav';
+import SoundGameWin from 'assets/sounds/winmusic.mp3';
 const soundGameWin = new UIfx({asset: SoundGameWin});
 
 

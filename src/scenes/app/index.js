@@ -116,7 +116,10 @@ class App extends Component {
       .then(csv => {
           const parsed = CsvParse(csv, {
           }, (err, output) => {
-            console.log('sheet data was read successfully')
+            console.log('sheet data was read successfully', output);
+            if(!output){
+              global.window.alert('Sheet data was not loaded correctly. Check the query params and try again.')
+            }
             this.props.setSheetData(output);
             return output;
           });

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
-import ReactFitText from 'react-fittext';
 
 import { themeGet } from 'themes/';
 
@@ -109,9 +108,7 @@ class FastMoneyAnswer extends Component {
         <HtmlAnswer>
           <HtmlAnswerLeft onClick={this.props.onClick} >
             <HtmlAnswerCover isShowing={this.props.revealed} isPopulated={this.props.populated}/>
-            <ReactFitText>
-              <span>{this.props.title}</span>
-            </ReactFitText>
+            <span>{this.props.title}</span>
           </HtmlAnswerLeft>
           <HtmlAnswerRight onClick={this.props.onScoreClick}>
             <HtmlAnswerCover isShowing={this.props.scoreRevealed} isPopulated={this.props.populated}/>

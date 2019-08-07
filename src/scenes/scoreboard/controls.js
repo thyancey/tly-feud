@@ -18,6 +18,7 @@ import SoundTheme from 'assets/sounds/theme.mp3';
 import UIfx from 'uifx';
 import SoundKaChing from 'assets/sounds/ka-ching.mp3';
 import SoundFmBuzzer from 'assets/sounds/fastmoney-tryagain.wav';
+import SoundScratch from 'assets/sounds/scratch.mp3';
 
 import { 
   awardPoints, 
@@ -29,6 +30,7 @@ import {
 import { createSelector_getSurvey, createSelector_getSurveyType, createSelector_getFastMoneyRound } from 'store/selectors';
 const soundKaChing = new UIfx({asset: SoundKaChing});
 const soundFmBuzzer = new UIfx({asset: SoundFmBuzzer});
+const soundScratch = new UIfx({asset: SoundScratch});
 
 const HtmlFooter = styled.div`
   grid-column: 1 / span 3;
@@ -94,6 +96,9 @@ class Controls extends Component {
   }
 
   toggleMusic(musicState){
+    if(musicState === false){
+      soundScratch.setVolume(.4).play();
+    }
     this.setState({
       soundPlaying: musicState || false
     })
