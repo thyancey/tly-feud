@@ -33,7 +33,7 @@ class App extends Component {
 
     this.refGameController = React.createRef();
 
-    this.loadStoreData();
+    // this.loadDefaultData();
   }
 
   getSurveyParams(){
@@ -53,7 +53,7 @@ class App extends Component {
 
   refreshSheetData(){
     if(this.props.sheetId && this.props.tabId){
-      this.loadSheetData(this.props.sheetId, this.props.tabId);
+      this.loadGlitchData(this.props.sheetId, this.props.tabId);
     }
   }
 
@@ -70,7 +70,7 @@ class App extends Component {
   }
 
 
-  loadStoreData(){
+  loadDefaultData(){
     const url = './data.json';
     console.log(`reading app data from '${url}'`);
 
@@ -101,6 +101,21 @@ class App extends Component {
     }
   }
 
+  loadGlitchData(sheetId, tabId){
+    const url = `https://tly-sheet-reader.glitch.me/${sheetId}/${tabId}`;
+    console.log('loadSheetData:', url)
+
+    fetch(url, { cache: 'no-cache' })
+      .then(response => response.json(), 
+        err => {
+          console.error('Error fretching url', err);
+        }) //- bad url responds with 200/ok? so this doesnt get thrown
+      .then(data => {
+        console.log('got', data);
+        this.props.setSheetData({ type:'json', data: data });
+      })
+  }
+
   loadSheetData(sheetId, tabId){
     const url = `https://docs.google.com/spreadsheets/d/e/${sheetId}/pub?gid=${tabId}&output=csv`;
     console.log('loadSheetData:', url)
@@ -120,7 +135,7 @@ class App extends Component {
             if(!output){
               global.window.alert('Sheet data was not loaded correctly. Check the query params and try again.')
             }
-            this.props.setSheetData(output);
+            this.props.setSheetData({ type:'csv', data: output });
             return output;
           });
         }, 

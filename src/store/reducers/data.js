@@ -112,16 +112,21 @@ export default (state = initialState, action) => {
     }
 
     case SET_SHEET_DATA:{
-      const parsedData = action.payload;
-      if(!parsedData){
+      if(!action.payload.data){
         return {
           ...state
         }
-      }else{
-        const surveyJson = parseSheetCsv(parsedData);
+      }else if(action.payload.type === 'csv'){
+        const surveyJson = parseSheetCsv(action.payload.data);
         return {
           ...state,
           surveys: surveyJson
+        }
+      }else if(action.payload.type === 'json'){
+        console.log('send it ', action.payload.data)
+        return {
+          ...state,
+          surveys: action.payload.data.surveys
         }
       }
     }
