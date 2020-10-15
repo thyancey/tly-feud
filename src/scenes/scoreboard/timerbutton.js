@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { themeGet } from 'themes/';
 import IconTimer from 'assets/icons/ic-timer.svg';
 import IconTimerOff from 'assets/icons/ic-timer-off.svg';
+import InputManager from '../../util/input-manager';
 
 import UIfx from 'uifx';
 import SoundStrike from 'assets/sounds/strike.wav';
@@ -68,6 +69,8 @@ class TimerButton extends Component {
       timeLeft: null,
       timerEnd: null
     };
+    
+    this.onInput = this.onInput.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -77,8 +80,19 @@ class TimerButton extends Component {
     }
   }
 
+  componentDidMount(){
+    InputManager.addListeners(['startTimer'], this.onInput);
+  }
   componentWillUnmount(){
+    InputManager.removeListeners(['startTimer'], this.onInput);
     this.killIntervalTimer();
+  }
+
+  onInput(command){
+    switch(command.action){
+      case 'startTimer': this.toggleTimer();
+        break;
+    }
   }
 
   throwTimeUp(){

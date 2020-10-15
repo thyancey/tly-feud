@@ -35,7 +35,6 @@ class App extends Component {
 
     // this.loadDefaultData();
   }
-
   getSurveyParams(){
     const params = new URLSearchParams(window.location.search);
     const sheetId = params.get('sheet');
