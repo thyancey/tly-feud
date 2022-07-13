@@ -34,6 +34,7 @@ class App extends Component {
     this.refGameController = React.createRef();
 
     // this.loadDefaultData();
+    global.refreshSheetData = this.refreshSheetData;
   }
   getSurveyParams(){
     const params = new URLSearchParams(window.location.search);
