@@ -100,10 +100,73 @@ class App extends Component {
       this.props.setGoogleSheetData(sheetData.sheetId, sheetData.tabId);
     }
   }
+  
+  convertToFeud(rawRawData){
+    // return rawData.rows;
+    // data comes in as
+    // ['HEADER1', 'HEADER2']
+    // ['ROWV1','ROWV2']
+
+    // so first make an array of objects?
+    const headerValues = rawRawData.shift();
+    const rawData = rawRawData.map(rawRowOfColumns => {
+      let rowObj = {};
+      for(let c = 0; c < rawRowOfColumns.length; c++){
+        rowObj[headerValues[c]] = rawRowOfColumns[c];
+      }
+      return rowObj;
+    });
+
+    console.log('rawData is ', rawData)
+    
+    const surveys = [];
+    let curSurvey = null;
+    for(let r = 0; r < rawData.length; r++){
+      const row = rawData[r];
+      
+      if(row['TYPE']){
+        if(row['TYPE'] === 'END'){
+          break;
+        }
+        if(curSurvey && curSurvey.title){
+          surveys.push(curSurvey);
+        }
+  
+        curSurvey = {
+          id: surveys.length + 1,
+          type: row['TYPE'],
+          title: row['SURVEY'],
+          multiplier: parseInt(row['MULTIPLIER'] || 1),
+          answers: []
+        };
+      }else if(row['ANSWER']){
+        curSurvey.answers.push({
+          value: row['ANSWER'],
+          points: parseInt(row['POINTS'] || 0),
+          populated: row['ANSWER'] !== "-"
+        });
+      }
+    }
+  
+    if(curSurvey && curSurvey.title){
+      surveys.push(curSurvey);
+    }
+    
+    return {
+      "title":"",
+      "teams":{
+        "left":"",
+        "right":""
+      },
+      surveys: surveys
+    };
+  }
 
   loadGlitchData(sheetId, tabId){
-    const url = `https://tly-sheet-reader.glitch.me/${sheetId}/${tabId}`;
+    // const url = `https://tly-sheet-reader.glitch.me/${sheetId}/${tabId}`;
+    const url = `https://script.google.com/macros/s/AKfycbzAaYcqbSihJmMQQsaEc4QyGHEXjHd1wz7x_rdo0FsllQp4V0_rCs7ChDIGq_hCA0Qh/exec`;
     console.log('loadSheetData:', url)
+
 
     fetch(url, { cache: 'no-cache' })
       .then(response => response.json(), 
@@ -112,7 +175,9 @@ class App extends Component {
         }) //- bad url responds with 200/ok? so this doesnt get thrown
       .then(data => {
         console.log('got', data);
-        this.props.setSheetData({ type:'json', data: data });
+        const convertedData = this.convertToFeud(data.data)
+        console.log('convertedData', convertedData)
+        this.props.setSheetData({ type:'json', data: convertedData });
       })
   }
 
