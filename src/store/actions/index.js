@@ -270,3 +270,19 @@ export const timeupTransitionWithStrike = (action, payload, dispatch) => {
     }
   ])(dispatch);
 }
+
+// export const COMMAND_SHORTCUT = 'COMMAND_SHORTCUT';
+// export const commandShortcut = (data) => {
+//   return dispatch => {
+//     switch(data){
+//       case 'strike':
+//         break;
+//     }
+
+    
+//     dispatch({
+//       type: SET_DATA,
+//       payload: data
+//     });
+//   }
+// }

@@ -20,6 +20,7 @@ import {
  
 const initialState = {
   roundId: 0,
+  dataLoaded: false,
   activeTeam: null,
   roundStart: null,
   roundActive: false,
@@ -51,7 +52,8 @@ export default (state = initialState, action) => {
       }else{
         return {
           ...state,
-          roundId: 1
+          roundId: 1,
+          dataLoaded: true
         }
       }
     }

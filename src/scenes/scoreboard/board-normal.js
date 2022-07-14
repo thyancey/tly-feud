@@ -7,6 +7,7 @@ import { themeGet } from 'themes/';
 import Answer from './answer';
 import Scorebox from './scorebox';
 import GameControls from './controls';
+import InputManager from '../../util/input-manager';
 
 import { 
   startRound, 
@@ -117,6 +118,31 @@ const HtmlRoundTitle = styled.div`
 
 class NormalBoard extends Component {
 
+  constructor(){
+    super();
+
+    this.onInput = this.onInput.bind(this);
+  }
+
+  componentDidMount(){
+    InputManager.addListeners(['selectLeftTeam', 'selectRightTeam', 'strike' ], this.onInput);
+  }
+
+  componentWillUnmount(){
+    InputManager.removeListeners(['selectLeftTeam', 'selectRightTeam', 'strike' ], this.onInput);
+  }
+  
+  onInput(command){
+    switch(command.action){
+      case 'selectLeftTeam': this.props.setActiveTeam('left');
+        break;
+      case 'selectRightTeam': this.props.setActiveTeam('right');
+        break;
+      case 'strike': this.throwStrike();
+        break;
+    }
+  }
+
   renderAnswer(answerObj, i){
     return (
       <Answer 
@@ -208,7 +234,6 @@ class NormalBoard extends Component {
         </HtmlRoundBox>
       );
     }
-
   }
 
   throwStrike(){

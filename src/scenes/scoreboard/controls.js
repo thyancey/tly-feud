@@ -19,6 +19,7 @@ import UIfx from 'uifx';
 import SoundKaChing from 'assets/sounds/ka-ching.mp3';
 import SoundFmBuzzer from 'assets/sounds/fastmoney-tryagain.wav';
 import SoundScratch from 'assets/sounds/scratch.mp3';
+import InputManager from '../../util/input-manager';
 
 import { 
   awardPoints, 
@@ -87,6 +88,29 @@ class Controls extends Component {
     this.state = {
       soundPlaying: false
     };
+
+    this.onInput = this.onInput.bind(this);
+  }
+
+  componentDidMount(){
+    InputManager.addListeners(['awardPoints', 'nextRound', 'playMusic', 'strike' ], this.onInput);
+  }
+
+  componentWillUnmount(){
+    InputManager.removeListeners(['awardPoints', 'nextRound', 'playMusic', 'strike' ], this.onInput);
+  }
+
+  onInput(command){
+    switch(command.action){
+      case 'awardPoints': this.endRound();
+        break;
+      case 'nextRound': this.props.advanceRound();
+        break;
+      case 'playMusic': this.toggleMusic();
+        break;
+      case 'strike': if(this.props.surveyType === 'FASTMONEY') soundFmBuzzer.play();
+        break;
+    }
   }
 
   endRound(){
@@ -96,6 +120,11 @@ class Controls extends Component {
   }
 
   toggleMusic(musicState){
+    console.log('ms', musicState)
+    if(musicState === undefined){
+      musicState = !this.state.soundPlaying;
+    }
+    console.log('ms2', musicState)
     if(musicState === false){
       soundScratch.setVolume(.4).play();
     }
