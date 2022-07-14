@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import CsvParse from 'csv-parse';
 
 import { setData, setSheetData, setGoogleSheetData } from 'store/actions/index.js';
 import { themeGet } from 'themes/';
-import Scoreboard from 'scenes/scoreboard';
-import EndScreen from 'scenes/endscreen';
+import Board from './board';
 import Modal from 'scenes/modal';
 import GameController from './gamecontroller';
 import { createSelector_getSurvey } from 'store/selectors';
@@ -41,6 +39,9 @@ class App extends Component {
     const sheetId = params.get('sheet');
     const tabId = params.get('tab');
 
+    if(!sheetId) window.alert('missing required queryParam "?sheet"');
+    if(!tabId) window.alert('missing required queryParam "?tab"');
+
     if(sheetId && tabId){
       return {
         sheetId: sheetId,
@@ -53,7 +54,7 @@ class App extends Component {
 
   refreshSheetData(){
     if(this.props.sheetId && this.props.tabId){
-      this.loadGlitchData(this.props.sheetId, this.props.tabId);
+      this.loadGoogleSheetData(this.props.sheetId, this.props.tabId);
     }
   }
 
@@ -101,7 +102,7 @@ class App extends Component {
     }
   }
   
-  convertToFeud(rawRawData){
+  convertSheetMatrixToFeudData(rawRawData){
     // return rawData.rows;
     // data comes in as
     // ['HEADER1', 'HEADER2']
@@ -162,51 +163,25 @@ class App extends Component {
     };
   }
 
-  loadGlitchData(sheetId, tabId){
-    // const url = `https://tly-sheet-reader.glitch.me/${sheetId}/${tabId}`;
-    const url = `https://script.google.com/macros/s/AKfycbzAaYcqbSihJmMQQsaEc4QyGHEXjHd1wz7x_rdo0FsllQp4V0_rCs7ChDIGq_hCA0Qh/exec`;
-    console.log('loadSheetData:', url)
-
+  loadGoogleSheetData(sheetId, tabId){
+    const appsScriptDeployment = 'https://script.google.com/macros/s/AKfycbxrYRu0rDa4lSeGOybsAWrANpDa6DnGYE5EsX58cR16Yky2p0nt2rxqkQAHw03Yze5-/exec';
+    const url = `${appsScriptDeployment}?sheet=${sheetId}&tab=${tabId}`;
+    console.log('loadGoogleSheetData from url:', url);
 
     fetch(url, { cache: 'no-cache' })
       .then(response => response.json(), 
         err => {
-          console.error('Error fretching url', err);
+          console.error('Error fetching url', err);
         }) //- bad url responds with 200/ok? so this doesnt get thrown
       .then(data => {
-        console.log('got', data);
-        const convertedData = this.convertToFeud(data.data)
-        console.log('convertedData', convertedData)
+        if(!data){
+          global.window.alert('Sheet data was not loaded correctly. Ensure the sheet and tab IDs are valid, your google sheet is published, and try again.');
+        }
+        console.log('received raw data from AppsScript', data);
+        const convertedData = this.convertSheetMatrixToFeudData(data.data)
+        console.log('converted to feudData', convertedData);
         this.props.setSheetData({ type:'json', data: convertedData });
-      })
-  }
-
-  loadSheetData(sheetId, tabId){
-    const url = `https://docs.google.com/spreadsheets/d/e/${sheetId}/pub?gid=${tabId}&output=csv`;
-    console.log('loadSheetData:', url)
-
-    fetch(url, { cache: 'no-cache' })
-      .then(response => {
-          const csv = response.clone().text();
-          return csv;
-        }, 
-        err => {
-          console.error('Error fretching url', err);
-        }) //- bad url responds with 200/ok? so this doesnt get thrown
-      .then(csv => {
-          const parsed = CsvParse(csv, {
-          }, (err, output) => {
-            console.log('sheet data was read successfully', output);
-            if(!output){
-              global.window.alert('Sheet data was not loaded correctly. Check the query params and try again.')
-            }
-            this.props.setSheetData({ type:'csv', data: output });
-            return output;
-          });
-        }, 
-        err => {
-          console.error('Error parsing sheet CSV (or the url was bad)', err);
-        });
+      });
   }
 
   render(){
@@ -214,11 +189,10 @@ class App extends Component {
       <HtmlApp id="app" tabIndex="-1">
         <Modal />
         <GameController />
-        { this.props.survey ? (
-          <Scoreboard />
-        ):(
-          <EndScreen />
-        )}
+        <Board
+          dataLoaded={this.props.dataLoaded}
+          survey={this.props.survey}
+        />
       </HtmlApp>
     );
   }
@@ -231,6 +205,7 @@ const makeMapStateToProps = () => {
     surveys: state.data.surveys,
     roundId: state.game.roundId,
     surveys: state.data.surveys,
+    dataLoaded: state.game.dataLoaded,
     loaded: state.data.slideIdx,
     title: state.data.title,
     activeTeam: state.game.activeTeam,
